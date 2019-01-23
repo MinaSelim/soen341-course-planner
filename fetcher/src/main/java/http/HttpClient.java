@@ -31,14 +31,13 @@ public class HttpClient {
      * @param url
      * @return
      */
-    public String get (String url) throws IOException {
+    public String get (String link) throws IOException {
 
-        URL getUrl = new URL("https://jsonplaceholder.typicode.com/posts/1");
-        //URL getUrl = new URL(url);
+        URL url = new URL(link);
         String readLine = null;
 
         //Setup connection
-        HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
 
         //Set Http Basic Authentication Header
