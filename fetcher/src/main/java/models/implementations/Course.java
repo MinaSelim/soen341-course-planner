@@ -2,7 +2,9 @@ package models.implementations;
 
 import models.ICourse;
 import models.SSObject;
+import models.SemesterSeasons;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Course implements ICourse {
@@ -12,7 +14,7 @@ public class Course implements ICourse {
     private String courseID;
 
 
-    private List<ICourse> prerequisites;
+    private List<String> prerequisites;
     private String courseSubject;
     private String courseCatalog;
 
@@ -21,7 +23,7 @@ public class Course implements ICourse {
 
     public Course(){}
 
-    public Course(String courseName, String courseTitle, String courseID, List<ICourse> prerequisites, String courseSubject, String courseCatalog, int creditUnits, String academicCareer) {
+    public Course(String courseName, String courseTitle, String courseID, List<String> prerequisites, String courseSubject, String courseCatalog, int creditUnits, String academicCareer) {
         this.courseName = courseName;
         this.courseTitle = courseTitle;
         this.courseID = courseID;
@@ -32,7 +34,7 @@ public class Course implements ICourse {
         this.academicCareer = academicCareer;
     }
 
-    public List<ICourse> getPrerequisites() {
+    public List<String> getPrerequisites() {
         return null;
     }
 
@@ -44,8 +46,8 @@ public class Course implements ICourse {
         return null;
     }
 
-    public int getCourseID() {
-        return 0;
+    public String getCourseID() {
+        return "";
     }
 
     public String getCourseSubject() {
@@ -64,11 +66,20 @@ public class Course implements ICourse {
         return null;
     }
 
-    public SSObject.Seasons[] getCourseAvailability() {
-        return new SSObject.Seasons[0];
+    public SemesterSeasons[] getCourseAvailability() {
+        return null;
     }
 
-    public SSObject.Seasons[] getEngineerAvailability() {
-        return new SSObject.Seasons[0];
+    public SemesterSeasons[] getEngineerAvailability() {
+        return null;
+    }
+
+    @Override
+    public String toString(){
+
+        String[] info = new String[prerequisites.size()];
+        info = prerequisites.toArray(info);
+
+        return courseSubject + "" + courseCatalog + "; " + Arrays.toString(info);
     }
 }

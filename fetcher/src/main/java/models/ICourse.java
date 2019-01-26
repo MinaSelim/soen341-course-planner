@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface ICourse {
 
+
+    /*
     public List<ICourse> getPrerequisites();
     public String getCourseName();
     public String getCourseTitle();
@@ -14,5 +16,20 @@ public interface ICourse {
     public String getAcademicCareer();
     public SSObject.Seasons[] getCourseAvailability();
     public SSObject.Seasons[] getEngineerAvailability();
+
+
+
+    public int getCreditUnits();
+    public SemesterSeasons[] getCourseAvailability();
+    public SemesterSeasons[] getEngineerAvailability();
+
+    */
+
+
+    public List<String> getPrerequisites();
+    public String getCourseName();
+    public int getCreditUnits();
+    public SemesterSeasons[] getCourseAvailability();
+    public SemesterSeasons[] getEngineerAvailability();
 
 }
