@@ -1,0 +1,16 @@
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+//sourceSets.main.java.srcDirs = ['src/main/java']
+
+repositories {
+   mavenCentral()
+}
+
+
+dependencies {
+   testImplementation "junit:junit:4.12"
+   implementation project(':Common')
+}
+	

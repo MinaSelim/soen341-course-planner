@@ -5,3 +5,5 @@ include ':Common'
 project(':Common').projectDir = new File(settingsDir,"../../Common")
 include ':courseFetcher'
 project(':courseFetcher').projectDir = new File(settingsDir,"../courseFetcher")
+include ':Sequencer'
+project(':Sequencer').projectDir = new File(settingsDir,"../Sequencer")
