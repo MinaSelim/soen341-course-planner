@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package skynet_sequencer;
+package skynet.sequencer;
 
 /**
  *
  * @author menac
  */
-public interface I_Course {
+public interface ICourse {
     public Course[] getPrerequisites();
     public String getCourseName(); 
     public String[] getSemesterAvailability(); 
