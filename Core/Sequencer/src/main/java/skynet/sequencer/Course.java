@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package skynet_sequencer;
+package skynet.sequencer;
 
 /**
  *
  * @author menac
  */
-public class Course implements I_Course {
+public class Course implements ICourse {
     
     private String name;
     private Course[] prereqs; 

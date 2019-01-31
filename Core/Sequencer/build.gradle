@@ -1,0 +1,20 @@
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+//sourceSets.main.java.srcDirs = ['src/main/java']
+
+application {
+    mainClassName = "skynet.sequencer.SkynetSequencer"
+}
+
+repositories {
+   mavenCentral()
+}
+
+
+dependencies {
+   testImplementation "junit:junit:4.12"
+}
+	

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package skynet_sequencer;
+package skynet.sequencer;
 
 /**
  *
@@ -12,7 +12,7 @@ package skynet_sequencer;
 
 import java.util.ArrayList;
 
-public class Skynet_Sequencer {
+public class SkynetSequencer {
 
     /**
      * @param args the command line arguments
