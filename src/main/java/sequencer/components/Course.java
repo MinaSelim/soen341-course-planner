@@ -42,11 +42,11 @@ public class Course implements ICourse {
     }
 
     public String getCourseName() {
-        return null;
+        return courseName;
     }
 
     public String getCourseTitle() {
-        return null;
+        return courseTitle;
     }
 
     public String getCourseID() {
@@ -54,19 +54,19 @@ public class Course implements ICourse {
     }
 
     public String getCourseSubject() {
-        return null;
+        return courseSubject;
     }
 
-    public int getCourseCatalog() {
-        return 0;
+    public String getCourseCatalog() {
+        return courseCatalog;
     }
 
     public int getCreditUnits() {
-        return 0;
+        return creditUnits;
     }
 
     public String getAcademicCareer() {
-        return null;
+        return academicCareer;
     }
 
     @Override
