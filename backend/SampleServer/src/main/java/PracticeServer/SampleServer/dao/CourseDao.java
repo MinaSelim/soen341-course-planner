@@ -53,10 +53,7 @@ public class CourseDao {
     //Update method which, given a course objects course code, you can change all of its other properties
     public void updateCourse (Course course)
     {
-        Course c = courses.get(course.getCourseCode());
-        c.setCourseName(course.getCourseName());
-        c.setCredits(course.getCredits());
-        courses.put(course.getCourseCode(), course);
+        this.courses.put(course.getCourseCode(), course);
     }
 
     //Insert method, that allows to add a new course object to the server

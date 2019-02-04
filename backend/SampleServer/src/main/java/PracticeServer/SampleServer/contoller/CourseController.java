@@ -24,40 +24,40 @@ public class CourseController
 
     //Instantiates a an object of class CourseService
     @Autowired
-    private CourseService courseservice;
+    private CourseService courseService;
 
     //Get method that returns all existing object
     @RequestMapping(method = RequestMethod.GET)
     public Collection<Course> getAllCourses()
     {
-        return courseservice.getAllCourses();
+        return courseService.getAllCourses();
     }
 
     //Get method that returns a course object based on the objects course code
     @RequestMapping(value = "/{courseCode}", method = RequestMethod.GET)
     public Course getCourseByCode(@PathVariable("courseCode") String courseCode)
     {
-        return courseservice.getCourseByCode(courseCode);
+        return courseService.getCourseByCode(courseCode);
     }
 
     //Delete method that deletes a course object based off its course code
     @RequestMapping(value = "/{courseCode}", method = RequestMethod.DELETE)
     public void removeCourseByCode(@PathVariable("courseCode") String courseCode)
     {
-        courseservice.removeCourseByCode(courseCode);
+        courseService.removeCourseByCode(courseCode);
     }
 
     //Update method which, given a course objects course code, you can change all of its other properties, ONLY takes in object of type JSON
     @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void updateCourse(@RequestBody Course course)
     {
-        courseservice.updateCourse(course);
+        courseService.updateCourse(course);
     }
 
     //Insert method, that allows to add a new course object to the server, ONLY takes in objects of type JSON
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void insertCourse(@RequestBody Course course)
 	{
-	    courseservice.insertCourse(course);
+	    courseService.insertCourse(course);
 	}
 }
