@@ -25,7 +25,9 @@ public interface ICourse {
 
     */
 
-
+    public List<ICourse> getPrereq();
+    public String getCourseSubject();
+    public String getCourseCatalog();
     public List<String> getPrerequisites();
     public String getCourseName();
     public int getCreditUnits();

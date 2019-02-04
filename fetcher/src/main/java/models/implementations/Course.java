@@ -4,6 +4,7 @@ import models.ICourse;
 import models.SSObject;
 import models.SemesterSeasons;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +22,11 @@ public class Course implements ICourse {
     private int creditUnits;
     private String academicCareer;
 
+
+
+    private List<ICourse> prereq;
+
+
     public Course(){}
 
     public Course(String courseName, String courseTitle, String courseID, List<String> prerequisites, String courseSubject, String courseCatalog, int creditUnits, String academicCareer) {
@@ -32,14 +38,20 @@ public class Course implements ICourse {
         this.courseCatalog = courseCatalog;
         this.creditUnits = creditUnits;
         this.academicCareer = academicCareer;
+
+        this.prereq = new ArrayList<ICourse>();
+    }
+
+    public List<ICourse> getPrereq() {
+        return prereq;
     }
 
     public List<String> getPrerequisites() {
-        return null;
+        return prerequisites;
     }
 
     public String getCourseName() {
-        return null;
+        return courseName;
     }
 
     public String getCourseTitle() {
@@ -51,11 +63,11 @@ public class Course implements ICourse {
     }
 
     public String getCourseSubject() {
-        return null;
+        return courseSubject;
     }
 
-    public int getCourseCatalog() {
-        return 0;
+    public String getCourseCatalog() {
+        return courseCatalog;
     }
 
     public int getCreditUnits() {

@@ -31,15 +31,23 @@ public class ConcordiaApiParser {
         return courses;
     }
 
+    public static Course getCourse(String jsonResponse){
+        JsonElement httpContent = new JsonParser().parse(jsonResponse);
+        JsonArray coursesJson = httpContent.getAsJsonArray();
+
+        return getCourseFromJson(coursesJson.get(0).getAsJsonObject(), null);
+    }
+
     private static Course getCourseFromJson(JsonObject element, HashMap<String, ICourse> map){
 
         JsonElement prereq = element.get("prerequisites");
         String id = element.get("ID").getAsString();
 
-        if(map.containsKey(id))
+        if(map != null && map.containsKey(id))
             return null;
 
         List<String> pre = new ArrayList<String>();
+
         if(prereq != null)
             getPrereq(prereq.getAsString(), pre);
 
@@ -54,7 +62,8 @@ public class ConcordiaApiParser {
                 element.get("career").getAsString()
         );
 
-        map.put(id, course);
+        if(map != null)
+            map.put(id, course);
 
         return course;
     }

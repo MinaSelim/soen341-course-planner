@@ -28,7 +28,7 @@ public class HttpClient {
      *
      *
      * This method was written using: https://dzone.com/articles/how-to-implement-get-and-post-request-through-simp
-     * @param url
+     * @param link
      * @return
      */
     public String get (String link) throws IOException {

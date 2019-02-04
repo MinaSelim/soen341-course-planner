@@ -1,6 +1,8 @@
 
 import http.jsonParsers.ConcordiaApiParser;
 import models.ICourse;
+import org.apache.commons.codec.binary.Base64;
+
 import services.CourseService;
 
 import java.io.IOException;
@@ -13,14 +15,15 @@ public class Run {
 
         //run sample code and tests here for now.
 
-        String user = "";
-        String pass = "";
+        String user = "132";
+        String pass = "6a388ea97bb3d994c699760a7ee01472";
+
+
         CourseService service = new CourseService(user, pass);
 
-        List<ICourse> courses = service.getCourseForProgram("COMP");
+        List<ICourse> courses = service.getCourseForProgram("SOEN");
 
         int i =0;
-
     }
 
 }
