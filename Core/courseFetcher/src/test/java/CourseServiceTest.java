@@ -47,6 +47,17 @@ public class CourseServiceTest {
         Assert.assertTrue(match);
     }
 
+    @Test
+    public void getCourse() throws IOException {
+
+        String code = "SOEN228";
+        String courseName = "System Hardware";
+        ICourse c = service.getCourse("SOEN", "228");
+        boolean match = code.equals(c.getCourseSubject() + c.getCourseCatalog()) && courseName.equals(c.getCourseName());
+
+        Assert.assertTrue(match);
+    }
+
     private String[] getExpectedSOENCourse(){
         String[] courses = {
                 "SOEN228","SOEN287","SOEN321","SOEN331","SOEN341","SOEN342","SOEN343","SOEN344","SOEN345","SOEN357",
