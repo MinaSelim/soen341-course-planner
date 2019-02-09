@@ -1,0 +1,11 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+   	mavenCentral()
+}
+
+dependencies {
+   	testImplementation 'junit:junit:4.12'
+   	compile project(":Common")
+}

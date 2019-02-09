@@ -1,0 +1,3 @@
+rootProject.name = 'Skynet'
+include ':Common'
+include ':Core:CourseFilter'
