@@ -11,6 +11,7 @@ import skynet.scheduler.common.*;
 public class TestCourseFilter {
 
 	private List<ICourse> testInputList;
+	private int checkValue;
 	
 	@Before
 	public void setup()
@@ -21,9 +22,58 @@ public class TestCourseFilter {
 	@Test
 	public void testSOEN() 
 	{
+		this.checkValue = 5;
+		/* This test constructs a list of 7 arbitrary courses
+		 * and verifies if the expected number of courses in the output list
+		 * equals to what would be expected if program specified is SOEN */
 		testInputList.add(new Course("","ENGR233",0));
-		assertEquals(testInputList.get(0),
-				courseFilter.FilterListForProgram("SOEN", testInputList).get(0));
+		testInputList.add(new Course("","ENGR202",0));
+		testInputList.add(new Course("","SOEN341",0));
+		testInputList.add(new Course("","COMP232",0));
+		testInputList.add(new Course("","ENGR201",0));
+		testInputList.add(new Course("","ELEC311",0));
+		/* The expected number of courses in the output list in this case is 5
+		 * since ELEC and COMP courses are not part of SOEN core */
+		assertEquals(checkValue,
+				courseFilter.FilterListForProgram("SOEN", testInputList).size());
+	}
+	
+	@Test
+	public void testCOMP()
+	{
+		this.checkValue = 1;
+		/* This test constructs a list of 7 arbitrary courses
+		 * and verifies if the expected number of courses in the output list
+		 * equals to what would be expected if program specified is COMP */
+		testInputList.add(new Course("","ENGR233",0));
+		testInputList.add(new Course("","ENGR202",0));
+		testInputList.add(new Course("","SOEN341",0));
+		testInputList.add(new Course("","COMP232",0));
+		testInputList.add(new Course("","ENGR201",0));
+		testInputList.add(new Course("","ELEC311",0));
+		/* The expected number of courses in the output list in this case is 1
+		 * since ELEC and ENGR courses are not part of COMP core */
+		assertEquals(checkValue,
+				courseFilter.FilterListForProgram("COMP", testInputList).size());
 	}
 
+	@Test
+	public void testSOENNull()
+	{
+		/* This test performs a check to verify that in no circumstances
+		 * the output of the filterListForProgram() method never returns null
+		 * even if the input list itself is null */
+		assertNotNull(courseFilter.FilterListForProgram("SOEN", null));
+		/* The expected output in this case is simply an empty list */
+	}
+	
+	@Test
+	public void testCOMPNull()
+	{
+		/* This test performs a check to verify that in no circumstances
+		 * the output of the filterListForProgram() method never returns null
+		 * even if the input list itself is null */
+		assertNotNull(courseFilter.FilterListForProgram("COMP", null));
+		/* The expected output in this case is simply an empty list */
+	}
 }

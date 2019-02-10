@@ -10,7 +10,7 @@ public class courseFilter
 	{
 		//Safety check to avoid iterating through a null list
 		if(unfilteredCourses == null)
-			return null;
+			return new ArrayList<ICourse>();
 		
 		//The output list of the method
 		List<ICourse> filteredCourses = new ArrayList<ICourse>();
@@ -85,8 +85,8 @@ public class courseFilter
 			}
 			break;
 		default:
-			System.out.println("Invalid Program String. Returning null");
-			return null;
+			System.out.println("Invalid Program String. Returning original list");
+			return unfilteredCourses;
 		}
 		
 		return filteredCourses;
