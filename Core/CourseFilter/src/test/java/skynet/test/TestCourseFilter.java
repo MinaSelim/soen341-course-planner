@@ -19,9 +19,9 @@ public class TestCourseFilter {
 	}
 	
 	@Test
-	public void testEquals() 
+	public void testSOEN() 
 	{
-		testInputList.add(new Course("","","",null,"ENCS","282",0,""));
+		testInputList.add(new Course("","ENGR233",0));
 		assertEquals(testInputList.get(0),
 				courseFilter.FilterListForProgram("SOEN", testInputList).get(0));
 	}
