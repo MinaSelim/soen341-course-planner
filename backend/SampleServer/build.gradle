@@ -13,6 +13,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'eclipse'
 
 group = 'PracticeServer'
 version = '0.0.1-SNAPSHOT'
@@ -25,4 +26,8 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+task npmInstall(type: Exec){
+	commandLine 'npm', 'install'
 }
