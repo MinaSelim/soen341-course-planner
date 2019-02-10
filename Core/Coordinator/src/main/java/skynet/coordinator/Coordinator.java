@@ -36,7 +36,6 @@ public class Coordinator
 		 * Obviously, this is very bare bones for now, later on we can add more arguments
 		 * for information on already completed courses which the user has specified
 		 * on the front end.*/
-		System.out.println("test");
 		switch(args[0])
 		{
 		case "SOEN":
