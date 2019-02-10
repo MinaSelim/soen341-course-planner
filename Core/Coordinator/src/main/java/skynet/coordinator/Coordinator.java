@@ -16,8 +16,7 @@ public class Coordinator
 	
 	/* Entry point of the core logic */
 	/* Main will return the completed list of Semester objects to the server */
-	/* NOTE: the extra parameters to the main are simply place holders so i can
-	/* implement a logical sequence of statements. I'm using interfaces for now
+	/* NOTE: I'm using interfaces for now
 	/* to simulate the Fetcher API and the prerequisite filler class.*/
 	public static void main(String[] args) 
 	{
