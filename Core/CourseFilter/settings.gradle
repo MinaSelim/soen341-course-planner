@@ -1,3 +1,1 @@
 rootProject.name = 'CourseFilter'
-include ':Common'
-project(':Common').projectDir = new File(settingsDir,"../../Common")
