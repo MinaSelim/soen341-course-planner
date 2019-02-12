@@ -1,5 +1,6 @@
 package skynet.coordinator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class Coordinator
 	/* Main will return the completed list of Semester objects to the server */
 	/* NOTE: I'm using interfaces for now
 	/* to simulate the Fetcher API and the prerequisite filler class.*/
-	public static void main(String[] args) 
+	public static void main(String[] args) throws IOException 
 	{
 		/* Instantiate the class objects 
 		 * Obviously those will not be null in the final,

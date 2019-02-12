@@ -1,6 +1,8 @@
 package skynet.test;
 
 import static org.junit.Assert.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
@@ -20,7 +22,7 @@ public class TestCourseFilter {
 	}
 	
 	@Test
-	public void testSOEN() 
+	public void testSOEN() throws IOException 
 	{
 		this.checkValue = 5;
 		/* This test constructs a list of 7 arbitrary courses
@@ -39,7 +41,7 @@ public class TestCourseFilter {
 	}
 	
 	@Test
-	public void testCOMP()
+	public void testCOMP() throws IOException
 	{
 		this.checkValue = 1;
 		/* This test constructs a list of 7 arbitrary courses
@@ -58,17 +60,18 @@ public class TestCourseFilter {
 	}
 
 	@Test
-	public void testSOENNull()
+	public void testSOENNull() throws IOException
 	{
 		/* This test performs a check to verify that in no circumstances
 		 * the output of the filterListForProgram() method never returns null
 		 * even if the input list itself is null */
 		assertNotNull(courseFilter.FilterListForProgram("SOEN", null));
 		/* The expected output in this case is simply an empty list */
+		System.out.println(System.getProperty("user.dir"));
 	}
 	
 	@Test
-	public void testCOMPNull()
+	public void testCOMPNull() throws IOException
 	{
 		/* This test performs a check to verify that in no circumstances
 		 * the output of the filterListForProgram() method never returns null

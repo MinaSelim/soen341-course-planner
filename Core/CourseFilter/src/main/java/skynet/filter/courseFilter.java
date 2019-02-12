@@ -1,12 +1,16 @@
 package skynet.filter;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import skynet.scheduler.common.*;
+
+import skynet.scheduler.common.ICourse;
 
 public class courseFilter
 {
-	public static List<ICourse> FilterListForProgram(String Program, List<ICourse> unfilteredCourses)
+	public static List<ICourse> FilterListForProgram(String Program, List<ICourse> unfilteredCourses) throws IOException
 	{
 		//Safety check to avoid iterating through a null list
 		if(unfilteredCourses == null)
@@ -15,80 +19,36 @@ public class courseFilter
 		//The output list of the method
 		List<ICourse> filteredCourses = new ArrayList<ICourse>();
 		
+		//Open the filter.txt file
+		BufferedReader fileReader = new BufferedReader(new FileReader("../CourseFilter/src/main/java/skynet/filter/filter.txt"));
 		
-		//Switch statement that filters courses based on program
-		//Note that these filters only apply for the General Program options for now
-		//Could modify for other options later if time allows
-		switch(Program)
+		//Set BufferedReader pointer to proper line in the filter.txt file
+		while(!fileReader.readLine().equals(Program));
+		
+		//Mark the BufferedReader pointer index while allowing at least 200 chars to be read and keeping the mark
+		fileReader.mark(200);
+		
+		//Start Filtering the List
+		for(int i = 0;i < unfilteredCourses.size(); ++i)
 		{
-		case "SOEN":
-			for(int i = 0;i < unfilteredCourses.size(); ++i)
+			String currentLine = fileReader.readLine();
+			boolean eof = false;
+			while(!eof)
 			{
-				String str = unfilteredCourses.get(i).getCourseCode();
-				
-				if(str.equals("ENGR201")
-						|| str.equals("ENGR213")
-						|| str.equals("ENGR233")
-						|| str.equals("ENGR202")
-						|| str.equals("ENGR317")
-						|| str.equals("ENGR391")
-						|| str.equals("ENGR301")
-						|| str.equals("ENGR392")
-						|| str.equals("SOEN228")
-						|| str.equals("SOEN287")
-						|| str.equals("SOEN331")
-						|| str.equals("SOEN341")
-						|| str.equals("SOEN342")
-						|| str.equals("SOEN343")
-						|| str.equals("SOEN384")
-						|| str.equals("SOEN344")
-						|| str.equals("SOEN345")
-						|| str.equals("SOEN357")
-						|| str.equals("SOEN390")
-						|| str.equals("SOEN321")
-						|| str.equals("SOEN490")
-						|| str.equals("SOEN385")
-						|| str.equals("COMP232")
-						|| str.equals("COMP348")
-						|| str.equals("COMP249")
-						|| str.equals("COMP348")
-						|| str.equals("COMP352")
-						|| str.equals("COMP346")
-						|| str.equals("COMP335")
-						|| str.equals("ENCS282"))
-				{
-					filteredCourses.add(unfilteredCourses.get(i));
-				}
+				if(currentLine.equals(unfilteredCourses.get(i).getCourseCode())
+						|| currentLine.equals("-"))
+					eof = true;
+				else
+					currentLine = fileReader.readLine();
 			}
-			break;
-		case "COMP":
-			for(int i = 0;i < unfilteredCourses.size(); ++i)
-			{
-				String str = unfilteredCourses.get(i).getCourseCode();
 			
-				if(str.equals("COMP232")
-						|| str.equals("COMP248")
-						|| str.equals("COMP228")
-						|| str.equals("COMP228")
-						|| str.equals("COMP233")
-						|| str.equals("COMP249")
-						|| str.equals("ENCS282")
-						|| str.equals("COMP348")
-						|| str.equals("COMP352")
-						|| str.equals("COMP346")
-						|| str.equals("COMP335")
-						|| str.equals("COMP354")
-						|| str.equals("ENCS393"))
-				{
-					filteredCourses.add(unfilteredCourses.get(i));
-				}
-			}
-			break;
-		default:
-			System.out.println("Invalid Program String. Returning original list");
-			return unfilteredCourses;
+			if(!currentLine.equals("-"))
+				filteredCourses.add(unfilteredCourses.get(i));
+			
+			fileReader.reset();	
 		}
 		
+		fileReader.close();
 		return filteredCourses;
 	}
 }
