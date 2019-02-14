@@ -1,10 +1,10 @@
 package skynet.filter;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import skynet.scheduler.common.ICourse;
 
@@ -19,36 +19,25 @@ public class courseFilter
 		//The output list of the method
 		List<ICourse> filteredCourses = new ArrayList<ICourse>();
 		
+		//The local String buffer to avoid reading from a file for every line check
+		List<String> filter = new ArrayList<String>();
+		
 		//Open the filter.txt file
-		BufferedReader fileReader = new BufferedReader(new FileReader("../CourseFilter/src/main/java/skynet/filter/filter.txt"));
+		Scanner fileReader = new Scanner(new File("../CourseFilter/src/main/java/skynet/filter/"+Program+"filter.txt"));
 		
-		//Set BufferedReader pointer to proper line in the filter.txt file
-		while(!fileReader.readLine().equals(Program));
+		//Populate the local String filter buffer
+		while(fileReader.hasNextLine()) filter.add(fileReader.nextLine());
 		
-		//Mark the BufferedReader pointer index while allowing at least 200 chars to be read and keeping the mark
-		fileReader.mark(200);
+		//Once done, close the scanner
+		fileReader.close();
 		
 		//Start Filtering the List
 		for(int i = 0;i < unfilteredCourses.size(); ++i)
 		{
-			String currentLine = fileReader.readLine();
-			boolean eof = false;
-			while(!eof)
-			{
-				if(currentLine.equals(unfilteredCourses.get(i).getCourseCode())
-						|| currentLine.equals("-"))
-					eof = true;
-				else
-					currentLine = fileReader.readLine();
-			}
-			
-			if(!currentLine.equals("-"))
+			if(filter.contains(unfilteredCourses.get(i).getCourseCode()))
 				filteredCourses.add(unfilteredCourses.get(i));
-			
-			fileReader.reset();	
 		}
-		
-		fileReader.close();
+	
 		return filteredCourses;
 	}
 }
