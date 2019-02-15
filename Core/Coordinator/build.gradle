@@ -1,0 +1,17 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+repositories {
+   	mavenCentral()
+}
+
+dependencies {
+   	testImplementation 'junit:junit:4.12'
+   	implementation project(':CourseFilter')
+   	implementation project(':Common')
+}
+
+application {
+	mainClassName = 'skynet.coordinator.Coordinator'
+}
