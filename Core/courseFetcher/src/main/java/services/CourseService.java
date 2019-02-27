@@ -1,14 +1,13 @@
 package services;
 
 
-import http.HttpClient;
-import http.jsonParsers.ConcordiaApiParser;
-import models.ICourse;
-import models.implementations.Course;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+
+import http.HttpClient;
+import http.jsonParsers.ConcordiaApiParser;
+import skynet.scheduler.common.ICourse;
 
 /*
     This service class is used to interact with the Concordia API.
@@ -84,11 +83,11 @@ public class CourseService {
         HashMap<String, ICourse> lookup = new HashMap();
 
         for(ICourse c: courses)
-            lookup.put(c.getCourseSubject() + c.getCourseCatalog(), c);
+            lookup.put(c.getCourseCode(), c);
 
         for(ICourse c: courses){
-            List<String> prereq = c.getPrerequisites();
-            attach(c, prereq, lookup);
+          //  List<String> prereq = c.getPrerequisites();
+         //   attach(c, prereq, lookup);
         }
 
     }
@@ -102,7 +101,7 @@ public class CourseService {
 
                 if(!hasPrereqCourse(code, course)) {
                     ICourse prereqCourse = getCourse(code, lookup);
-                    attach(prereqCourse, prereqCourse.getPrerequisites(), lookup);
+                  //  attach(prereqCourse, prereqCourse.getPrerequisites(), lookup);
                 }
             }
         }
@@ -134,7 +133,7 @@ public class CourseService {
 
     private boolean hasPrereqCourse(String code, ICourse course){
 
-        List<String> pre =course.getPrerequisites();
+        String[] pre =course.getPrerequisitesAsCourseCodes();
 
         for(String preCode: pre)
             if(preCode.equals(code));

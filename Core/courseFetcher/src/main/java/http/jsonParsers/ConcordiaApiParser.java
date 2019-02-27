@@ -1,15 +1,15 @@
 package http.jsonParsers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import models.implementations.Course;
+import skynet.scheduler.common.ICourse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import models.ICourse;
-import models.implementations.Course;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class ConcordiaApiParser {
 
@@ -47,6 +47,8 @@ public class ConcordiaApiParser {
             return null;
 
         List<String> pre = new ArrayList<String>();
+        String[] preArray = new String[pre.size()];
+        pre.toArray(preArray);
 
         if(prereq != null)
             getPrereq(prereq.getAsString(), pre);
@@ -55,7 +57,7 @@ public class ConcordiaApiParser {
                 element.get("title").getAsString(),
                 element.get("title").getAsString(),
                 id,
-                pre,
+                preArray,
                 element.get("subject").getAsString(),
                 element.get("catalog").getAsString(),
                 (int)element.get("classUnit").getAsDouble(),

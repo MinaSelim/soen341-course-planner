@@ -1,11 +1,13 @@
-import models.ICourse;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import services.CourseService;
 
 import java.io.IOException;
 import java.util.List;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import services.CourseService;
+import skynet.scheduler.common.ICourse;
 
 public class CourseServiceTest {
 
@@ -35,7 +37,7 @@ public class CourseServiceTest {
             for(int i =0; i < expected.length; i++){
 
                 ICourse course = courses.get(i);
-                String obtained = course.getCourseSubject() + course.getCourseCatalog();
+                String obtained = course.getCourseCode();
 
                 if(!expected[i].equals(obtained)) {
                     match = false;
@@ -53,7 +55,7 @@ public class CourseServiceTest {
         String code = "SOEN228";
         String courseName = "System Hardware";
         ICourse c = service.getCourse("SOEN", "228");
-        boolean match = code.equals(c.getCourseSubject() + c.getCourseCatalog()) && courseName.equals(c.getCourseName());
+        boolean match = code.equals(c.getCourseCode()) && courseName.equals(c.getCourseName());
 
         Assert.assertTrue(match);
     }

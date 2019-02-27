@@ -1,8 +1,9 @@
-import models.ICourse;
-import services.CourseService;
 
 import java.io.IOException;
 import java.util.List;
+
+import services.CourseService;
+import skynet.scheduler.common.ICourse;
 
 public class App {
 

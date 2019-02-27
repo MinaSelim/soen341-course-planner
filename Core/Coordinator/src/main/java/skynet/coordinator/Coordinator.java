@@ -6,11 +6,12 @@ import java.util.List;
 
 import skynet.filter.courseFilter;
 import skynet.scheduler.common.*;
+import services.*;
 
 public class Coordinator 
 {	
 	private static List<ICourse> fetchedCourses;
-	private static ICourseService service;
+	private static CourseService service;
 	private static IPrereqFiller filler;
 	private static ISequencer sequencer;
 	private static List<ISemester> sequence;
@@ -26,7 +27,7 @@ public class Coordinator
 		 * simply could not figure out a better way to design the code
 		 * without having access to the other modules */
 		fetchedCourses = new ArrayList<ICourse>();
-		service = null;
+		service = new CourseService("132","6a388ea97bb3d994c699760a7ee01472");
 		filler = null;
 		sequencer = null;
 		
@@ -53,7 +54,7 @@ public class Coordinator
 		
 		/* Once the courses fetched, call the populatePrereq() method to
 		 * fill the prerequisites course arrays within each ICourse object. */
-		fetchedCourses = filler.populatePrereq(fetchedCourses);
+		//fetchedCourses = filler.populatePrereq(fetchedCourses);
 		
 		/* The next step is to filter out all the courses that are not required for
 		 * specified degree */
@@ -63,7 +64,7 @@ public class Coordinator
 		 * a compatible list of semester objects */
 		/* Not exactly sure how the server will be able to fetch this list of semesters 
 		 * since this is a main function... Need some clarification. */
-		sequence = sequencer.generateSequence(fetchedCourses);
+		//sequence = sequencer.generateSequence(fetchedCourses);
 		
 		return;
 	}

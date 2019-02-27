@@ -1,12 +1,13 @@
 package models.implementations;
 
-import models.ICourse;
-import models.SSObject;
-import models.SemesterSeasons;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import skynet.scheduler.common.ICourse;
+import skynet.scheduler.common.SemesterSeasons;
 
 public class Course implements ICourse {
 
@@ -15,39 +16,33 @@ public class Course implements ICourse {
     private String courseID;
 
 
-    private List<String> prerequisites;
+    private String[] StringPrerequisites;
     private String courseSubject;
     private String courseCatalog;
-
-    private int creditUnits;
     private String academicCareer;
 
+    private double creditUnits;
 
-
-    private List<ICourse> prereq;
+    private ICourse[] prereq;
 
 
     public Course(){}
 
-    public Course(String courseName, String courseTitle, String courseID, List<String> prerequisites, String courseSubject, String courseCatalog, int creditUnits, String academicCareer) {
+    public Course(String courseName, String courseTitle, String courseID, String[] prerequisites, String courseSubject, String courseCatalog, int creditUnits, String academicCareer) {
         this.courseName = courseName;
         this.courseTitle = courseTitle;
         this.courseID = courseID;
-        this.prerequisites = prerequisites;
+        this.StringPrerequisites = prerequisites;
         this.courseSubject = courseSubject;
         this.courseCatalog = courseCatalog;
         this.creditUnits = creditUnits;
         this.academicCareer = academicCareer;
 
-        this.prereq = new ArrayList<ICourse>();
+        this.prereq = new ICourse[StringPrerequisites.length];
     }
 
-    public List<ICourse> getPrereq() {
+    public ICourse[] getPrereq() {
         return prereq;
-    }
-
-    public List<String> getPrerequisites() {
-        return prerequisites;
     }
 
     public String getCourseName() {
@@ -70,10 +65,6 @@ public class Course implements ICourse {
         return courseCatalog;
     }
 
-    public int getCreditUnits() {
-        return 0;
-    }
-
     public String getAcademicCareer() {
         return null;
     }
@@ -89,9 +80,33 @@ public class Course implements ICourse {
     @Override
     public String toString(){
 
-        String[] info = new String[prerequisites.size()];
-        info = prerequisites.toArray(info);
+        String[] info = new String[StringPrerequisites.length];
+        //info = StringPrerequisites.toArray(info);
 
-        return courseSubject + "" + courseCatalog + "; " + Arrays.toString(info);
+        return courseSubject + "" + courseCatalog + "; ";// + Arrays.toString(info);
     }
+
+	@Override
+	public ICourse[] getPrerequisites() {
+		// TODO Auto-generated method stub
+		return prereq;
+	}
+
+	@Override
+	public String[] getPrerequisitesAsCourseCodes() {
+		// TODO Auto-generated method stub
+		return StringPrerequisites;
+	}
+
+	@Override
+	public String getCourseCode() {
+		// TODO Auto-generated method stub
+		return courseSubject+courseCatalog;
+	}
+
+	@Override
+	public double getCreditUnits() {
+		// TODO Auto-generated method stub
+		return creditUnits;
+	}
 }
