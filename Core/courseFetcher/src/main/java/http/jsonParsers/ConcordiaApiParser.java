@@ -47,11 +47,12 @@ public class ConcordiaApiParser {
             return null;
 
         List<String> pre = new ArrayList<String>();
-        String[] preArray = new String[pre.size()];
-        pre.toArray(preArray);
 
         if(prereq != null)
             getPrereq(prereq.getAsString(), pre);
+
+        String[] preArray = new String[pre.size()];
+        pre.toArray(preArray);
 
         Course course =  new Course(
                 element.get("title").getAsString(),
