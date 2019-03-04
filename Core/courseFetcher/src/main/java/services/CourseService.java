@@ -59,7 +59,7 @@ public class CourseService {
     }
 
 
-    public List<ICourse> getCourseForProgram(String programCode) throws IOException {
+    public List<ICourse> getCoursesForProgram(String programCode) throws IOException {
 
         String url = String.format(COURSE_CATALOG, programCode, "*", "UGRD");
         String httpResponse = httpClient.get(url);

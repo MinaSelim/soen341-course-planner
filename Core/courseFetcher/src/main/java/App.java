@@ -17,7 +17,7 @@ public class App {
 
         CourseService service = new CourseService(user, pass);
 
-        List<ICourse> courses = service.getCourseForProgram("SOEN");
+        List<ICourse> courses = service.getCoursesForProgram("SOEN");
 
         int i =0;
     }

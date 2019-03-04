@@ -29,7 +29,7 @@ public class CourseServiceTest {
         boolean match = true;
         String[] expected = getExpectedSOENCourse();
 
-        List<ICourse> courses = service.getCourseForProgram("SOEN");
+        List<ICourse> courses = service.getCoursesForProgram("SOEN");
 
         //check size if the same
         match = expected.length == courses.size();

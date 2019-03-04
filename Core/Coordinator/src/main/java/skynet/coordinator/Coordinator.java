@@ -40,13 +40,13 @@ public class Coordinator
 		switch(args[0])
 		{
 		case "SOEN":
-			fetchedCourses = service.getCourseForProgram("SOEN");
-			fetchedCourses.addAll(fetchedCourses.size(), service.getCourseForProgram("ENGR"));
-			fetchedCourses.addAll(fetchedCourses.size(), service.getCourseForProgram("ENCS"));
+			fetchedCourses = service.getCoursesForProgram("SOEN");
+			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("ENGR"));
+			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("ENCS"));
 			break;
 		case "COMP":
-			fetchedCourses = service.getCourseForProgram("COMP");
-			fetchedCourses.addAll(fetchedCourses.size(), service.getCourseForProgram("ENCS"));
+			fetchedCourses = service.getCoursesForProgram("COMP");
+			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("ENCS"));
 			break;
 		default:
 			return;
