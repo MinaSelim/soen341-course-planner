@@ -38,6 +38,27 @@ task npmInstall(type: Exec) {
     commandLine npmCommand, 'install'
 }
 
+task webpack(type: Exec) {
+   dependsOn npmInstall
+   inputs.dir("React")
+   inputs.file("webpack.config.js")
+   outputs.dir("./src/main/resources/static")
+   outputs.dir("./build/resources/main/static")   
+   
+   String webpackCall = (Os.isFamily(Os.FAMILY_WINDOWS)) ? "$projectDir/node_modules/.bin/webpack.cmd" : "$projectDir/node_modules/.bin/webpack"
+   commandLine webpackCall , "./React/js/index.js"
+
+   doLast{
+      copy {
+         from "./src/main/resources/static"
+         into "./build/resources/main/static"
+      }
+   }
+}
+
+bootRun.dependsOn webpack
+
+
 dependencies {
 	npmInstall
 	implementation 'org.springframework.boot:spring-boot-starter-web'

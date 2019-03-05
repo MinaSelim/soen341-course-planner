@@ -1,0 +1,33 @@
+.Generic-Box-Container {
+    border: 1px solid black;
+    margin-left: 30%;
+    margin-right: 30%;
+    padding-top : 0px;
+    margin-top : 0px;
+  }
+ 
+  .Generic-Text-Wrapper {
+     padding-left: 4%;
+     padding-right: 4%;
+  }
+  
+  .Generic-Input-Box {
+     border: 1px solid black;
+  }
+ 
+  .Generic-X-button {
+    font-size : 200%;
+    font-weight: bold;
+    padding-left: 2px; 
+  }
+ 
+  .Generic-Block-Size {
+     display: block;
+     width: 98%;
+     box-sizing:border-box;
+  }
+ 
+  .Generic-Button {
+     height: 0.5cm;
+  }
+ 
