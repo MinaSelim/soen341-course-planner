@@ -5,3 +5,14 @@
 /.gradle/5.2.1/gc.properties
 /.gradle/buildOutputCleanup/buildOutputCleanup.lock
 /.gradle/buildOutputCleanup/cache.properties
+
+
+node_modules/
+.settings/
+bin/
+.gradle/
+Build/
+.metadata/
+
+.classpath
+.project
