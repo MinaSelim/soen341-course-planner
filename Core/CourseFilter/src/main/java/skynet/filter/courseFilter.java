@@ -10,6 +10,14 @@ import skynet.scheduler.common.ICourse;
 
 public class courseFilter
 {
+	/**
+	 * 
+	 * Returns a filtered list of ICourse objects that correspond to specified program from an unfiltered list.
+	 * @param Program String representing the program for which to filter the list
+	 * @param unfilteredCourses List containing all generic ICourse objects to be filtered
+	 * @return List<ICourse>
+	 * @throws IOException
+	 */
 	public static List<ICourse> FilterListForProgram(String Program, List<ICourse> unfilteredCourses) throws IOException
 	{
 		//Safety check to avoid iterating through a null list

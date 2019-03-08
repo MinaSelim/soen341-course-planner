@@ -3,5 +3,5 @@ include ':CourseFilter'
 project(':CourseFilter').projectDir = new File(settingsDir,"../CourseFilter")
 include ':Common'
 project(':Common').projectDir = new File(settingsDir,"../../Common")
-//include ':courseFetcher'
-//project(':courseFetcher').projectDir = new File(settingsDir,"../courseFetcher")
+include ':courseFetcher'
+project(':courseFetcher').projectDir = new File(settingsDir,"../courseFetcher")
