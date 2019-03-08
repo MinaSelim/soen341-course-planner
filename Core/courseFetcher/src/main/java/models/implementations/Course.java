@@ -110,7 +110,6 @@ public class Course implements ICourse {
 		return creditUnits;
 	}
 
-	@Override
 	public void setPrerequisites(ICourse[] prereq){
         this.prereq = prereq;
     }

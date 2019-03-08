@@ -6,15 +6,17 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import models.implementations.Course;
+
 /**
  * Class that will attach prerequisites to a list of courses.
  */
 public class Attach {
 
-    private ICourse[] courses;
+    private Course[] courses;
     private CourseService service;
 
-    public Attach(ICourse[] courses, CourseService service){
+    public Attach(Course[] courses, CourseService service){
         this.service = service;
         this.courses = courses;
     }
@@ -26,14 +28,14 @@ public class Attach {
         for(ICourse c: courses)
             lookup.put(c.getCourseCode(), c);
 
-        for(ICourse c: courses){
+        for(Course c: courses){
             String[] prerequisites = c.getPrerequisitesAsCourseCodes();
             attach(c, prerequisites, lookup);
         }
 
     }
 
-    private void attach(ICourse course, String[] prereq, HashMap<String, ICourse> lookup) throws IOException {
+    private void attach(Course course, String[] prereq, HashMap<String, ICourse> lookup) throws IOException {
         if(prereq == null || prereq.length == 0)
             return;
         else {
@@ -43,7 +45,7 @@ public class Attach {
                 String parsedCode = parsePrereq(code);
                 //fix spacing issue
                 if(parsedCode.indexOf(" ") == -1) {
-                    ICourse prereqCourse = getCourse(parsedCode, lookup);
+                    Course prereqCourse = (Course)getCourse(parsedCode, lookup);
                     if(prereqCourse != null) {
                         prerequisites[counter]= prereqCourse;
                         attach(prereqCourse, prereqCourse.getPrerequisitesAsCourseCodes(), lookup);
