@@ -9,4 +9,5 @@ public interface ICourse
 	public double getCreditUnits(); //3.5
 	public SemesterSeasons[] getCourseAvailability();
 	public SemesterSeasons[] getEngineerAvailability();
+	public void setPrerequisites(ICourse[] courses);
 }

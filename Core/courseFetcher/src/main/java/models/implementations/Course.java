@@ -109,4 +109,9 @@ public class Course implements ICourse {
 		// TODO Auto-generated method stub
 		return creditUnits;
 	}
+
+	@Override
+	public void setPrerequisites(ICourse[] prereq){
+        this.prereq = prereq;
+    }
 }

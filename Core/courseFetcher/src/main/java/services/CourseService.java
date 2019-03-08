@@ -74,7 +74,10 @@ public class CourseService {
     public ICourse getCourse(String programCode, String classCode) throws IOException {
         String url = String.format(COURSE_CATALOG, programCode, classCode, "UGRD");
         String httpResponse = httpClient.get(url);
-        return ConcordiaApiParser.getCourse(httpResponse);
+        if(httpResponse.equals("[]"))
+            return null;
+        else
+            return ConcordiaApiParser.getCourse(httpResponse);
     }
 
 
@@ -86,8 +89,8 @@ public class CourseService {
             lookup.put(c.getCourseCode(), c);
 
         for(ICourse c: courses){
-          //  List<String> prereq = c.getPrerequisites();
-         //   attach(c, prereq, lookup);
+            //  List<String> prereq = c.getPrerequisites();
+            //   attach(c, prereq, lookup);
         }
 
     }
@@ -101,7 +104,7 @@ public class CourseService {
 
                 if(!hasPrereqCourse(code, course)) {
                     ICourse prereqCourse = getCourse(code, lookup);
-                  //  attach(prereqCourse, prereqCourse.getPrerequisites(), lookup);
+                    //  attach(prereqCourse, prereqCourse.getPrerequisites(), lookup);
                 }
             }
         }
