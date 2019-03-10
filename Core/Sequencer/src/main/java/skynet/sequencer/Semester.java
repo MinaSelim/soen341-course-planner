@@ -64,7 +64,6 @@ public class Semester implements ISemester
     
 	@Override
 	public ICourse[] getCoursesScheduled() {
-		// TODO Auto-generated method stub
 		
 		ICourse[] iCourses = new ICourse[courses.size()];
 		courses.toArray(iCourses);
@@ -74,7 +73,6 @@ public class Semester implements ISemester
 
 	@Override
 	public SemesterSeasons getSemester() {
-		// TODO Auto-generated method stub
 		return seasonEnum;
 	}
 	

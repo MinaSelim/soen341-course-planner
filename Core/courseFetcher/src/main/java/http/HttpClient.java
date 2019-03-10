@@ -33,8 +33,6 @@ public class HttpClient {
     public String get (String link) throws IOException {
 
         URL url = new URL(link);
-        @SuppressWarnings("unused")
-		String readLine = null;
 
         //Setup connection
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

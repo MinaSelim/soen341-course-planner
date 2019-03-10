@@ -1,9 +1,9 @@
 package skynet.sequencer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import skynet.scheduler.common.Course;
+import skynet.scheduler.common.ICourse;
 
 public class Sequencer 
 {
@@ -28,13 +28,15 @@ public class Sequencer
     }
     
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+
 	public static void updateAvailability(List<Course> taken, List<Course> required, List<Course> available) 
     {
         for (int i = 0; i < required.size(); i++) 
         {
             Course currentCourse = required.get(i);
-            List<Course> currentPrereqs = new ArrayList(Arrays.asList(currentCourse.getPrerequisites()));
+            List<Course> currentPrereqs = new ArrayList<Course>();
+            for(ICourse j : currentCourse.getPrerequisites())
+            	currentPrereqs.add((Course)j);
             
             if (currentCourse.getPrerequisites().length == 0) 
             {
