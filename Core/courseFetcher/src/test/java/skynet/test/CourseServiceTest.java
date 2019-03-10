@@ -1,12 +1,12 @@
+package skynet.test;
 
 import java.io.IOException;
 import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import services.CourseService;
+import skynet.filter.courseFilter;
 import skynet.scheduler.common.ICourse;
 
 public class CourseServiceTest {
@@ -29,7 +29,7 @@ public class CourseServiceTest {
         boolean match = true;
         String[] expected = getExpectedSOENCourse();
 
-        List<ICourse> courses = service.getCoursesForProgram("SOEN");
+        List<ICourse> courses = service.getCoursesForProgram("SOEN", courseFilter.getFilterForProgram("SOEN"));
 
         //check size if the same
         match = expected.length == courses.size();

@@ -2,7 +2,6 @@ package http;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -15,7 +14,7 @@ public class HttpClient {
 
     /**
      * Initialize an HttpManager instance by providing it the credentials used for basic authentication.
-     * @param user
+     * @param user 
      * @param pass
      */
     public HttpClient(String user, String pass) {
@@ -34,7 +33,8 @@ public class HttpClient {
     public String get (String link) throws IOException {
 
         URL url = new URL(link);
-        String readLine = null;
+        @SuppressWarnings("unused")
+		String readLine = null;
 
         //Setup connection
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

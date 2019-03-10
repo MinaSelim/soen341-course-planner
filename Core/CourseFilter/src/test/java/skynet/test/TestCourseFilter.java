@@ -14,6 +14,8 @@ public class TestCourseFilter {
 
 	private List<ICourse> testInputList;
 	private int checkValue;
+
+	
 	
 	@Before
 	public void setup()
@@ -37,7 +39,7 @@ public class TestCourseFilter {
 		/* The expected number of courses in the output list in this case is 5
 		 * since ELEC and COMP courses are not part of SOEN core */
 		assertEquals(checkValue,
-				courseFilter.FilterListForProgram("SOEN", testInputList).size());
+				courseFilter.FilterListForProgram("SOEN", testInputList, null).size());
 	}
 	
 	@Test
@@ -56,7 +58,7 @@ public class TestCourseFilter {
 		/* The expected number of courses in the output list in this case is 1
 		 * since ELEC and ENGR courses are not part of COMP core */
 		assertEquals(checkValue,
-				courseFilter.FilterListForProgram("COMP", testInputList).size());
+				courseFilter.FilterListForProgram("COMP", testInputList, null).size());
 	}
 
 	@Test
@@ -65,7 +67,7 @@ public class TestCourseFilter {
 		/* This test performs a check to verify that in no circumstances
 		 * the output of the filterListForProgram() method never returns null
 		 * even if the input list itself is null */
-		assertNotNull(courseFilter.FilterListForProgram("SOEN", null));
+		assertNotNull(courseFilter.FilterListForProgram("SOEN", null, null));
 		/* The expected output in this case is simply an empty list */
 		System.out.println(System.getProperty("user.dir"));
 	}
@@ -76,7 +78,7 @@ public class TestCourseFilter {
 		/* This test performs a check to verify that in no circumstances
 		 * the output of the filterListForProgram() method never returns null
 		 * even if the input list itself is null */
-		assertNotNull(courseFilter.FilterListForProgram("COMP", null));
+		assertNotNull(courseFilter.FilterListForProgram("COMP", null, null));
 		/* The expected output in this case is simply an empty list */
 	}
 }

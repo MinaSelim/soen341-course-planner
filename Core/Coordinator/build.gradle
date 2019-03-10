@@ -11,7 +11,7 @@ dependencies {
    	implementation project(':CourseFilter')
    	implementation project(':Common')
    	implementation project(':courseFetcher')
-        implementation project(':Sequencer')
+    implementation project(':Sequencer')
 }
 
 application {

@@ -1,69 +1,64 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package skynet.sequencer;
-
-/**
- *
- * @author menac
- */
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import skynet.scheduler.common.Course;
 
-public class Sequencer {
-    
-    // Assigns each course in required a priority rating based on the number of
-    // courses it is a prerequisite for (recursively). 
-    public static void setPriority(Course course, ArrayList<Course> required) {
-        Course[] prereqs = course.getPrerequisites(); 
-        
-        // Scan through list of prereqs
-        for (int i = 0; i < prereqs.length; i++) {
+public class Sequencer 
+{
+
+    public static void setPriority(Course course, List<Course> required) 
+    {
+    	Course[] prereqs = new Course[course.getPrerequisites().length];
+    	for(int i = 0; i < prereqs.length ; ++i)
+    		prereqs[i] = (Course) course.getPrerequisites()[i];
+       
+        for (int i = 0; i < prereqs.length; i++) 
+        {
             Course currentPrereq = prereqs[i]; 
-            
-            // Update the priority of the direct prereq
-            for (int j = 0; j < required.size(); j++) {
-                if (currentPrereq == required.get(j))
+   
+            for (int j = 0; j < required.size(); j++) 
+            {
+                if (currentPrereq.getCourseCode().equals(required.get(j).getCourseCode()))
                     required.get(j).incrementPriority();
             }
-            
-            // Recursively update lower prereqs
             setPriority(currentPrereq, required); 
-        }
-        
+        }   
     }
     
-    // Moves courses from required to available if all prerequisites are in taken
-    public static void updateAvailability(ArrayList<Course> taken, ArrayList<Course> required, ArrayList<Course> available) {
 
-        for (int i = 0; i < required.size(); i++) {
-
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public static void updateAvailability(List<Course> taken, List<Course> required, List<Course> available) 
+    {
+        for (int i = 0; i < required.size(); i++) 
+        {
             Course currentCourse = required.get(i);
-            ArrayList<Course> currentPrereqs = new ArrayList(Arrays.asList(currentCourse.getPrerequisites()));
+            List<Course> currentPrereqs = new ArrayList(Arrays.asList(currentCourse.getPrerequisites()));
             
-            if (currentCourse.getPrerequisites().length == 0) {
+            if (currentCourse.getPrerequisites().length == 0) 
+            {
                 available.add(currentCourse);
                 required.remove(i--); 
             } 
-            else {
-                ArrayList<Course> copy = currentPrereqs;
-
-                for (int j = 0; j < copy.size(); j++) {
-                    for (int k = 0; k < taken.size(); k++) {
-                        if (copy.get(j) == taken.get(k)) {
-                            copy.remove(j--);
-                            break; // why?
-                        }  
-                    }
-                }
-
-                if (copy.isEmpty()) {
+            else 
+            {
+            	int preReqsDone = 0;
+            	for(int j = 0; j < currentPrereqs.size(); ++j)
+            	{
+            		for(int k = 0; k < taken.size(); ++k)
+            		{
+            			if(currentPrereqs.get(j).getCourseCode().equals(taken.get(k).getCourseCode()))
+            			{
+            				++preReqsDone;
+            			}
+            		}
+            	}
+                if (preReqsDone == currentPrereqs.size()) 
+                {
                     available.add(currentCourse);
                     required.remove(i--); 
-                } 
+                }
             }
         }
         
@@ -71,117 +66,77 @@ public class Sequencer {
             sortAvailable(available); 
     }
     
-    
-    // Simple selection sort to sort available based on course priority
-    // Highest to lowest
-    private static void sortAvailable(ArrayList<Course> available) {
-
-//        Course highestPriority = available.get(0);
-//        int highestPriorityIndex = 0; 
-//        Course highestPriority;
-
+    private static void sortAvailable(List<Course> available) 
+    {
         int highestIndex; 
-        
-        // Do properly
-        for (int i = 0; i < available.size()-1; i++) {
-            
+
+        for (int i = 0; i < available.size()-1; i++) 
+        {
             highestIndex = i;
-            for (int j = i+1; j < available.size(); j++) {
-                
+            for (int j = i+1; j < available.size(); j++) 
+            {
                 if (available.get(j).getPriority() > available.get(highestIndex).getPriority())
                     highestIndex = j;
-                
-//                if (available.get(j).getPriority() > highestPriority.getPriority()) {
-//                    highestPriority = available.get(j);
-//                    highestPriorityIndex = j;
-//                }
             }
             
-            // Swap
             Course temp = available.get(i);
             available.set(i, available.get(highestIndex));
             available.set(highestIndex, temp);
-            
-//            if (available.get(i) != highestPriority) {
-//                // Swap 
-//                Course temp = available.get(i);
-//                available.set(i, highestPriority);
-//                available.set(highestPriorityIndex, temp);
-//            }
         }
-        
-        //return available;
     }
     
-    public static ArrayList<Semester> generateSequence(String program, ArrayList<Course> taken, Course[] all) {
-
-        // Step 1: Create ArrayList of required courses
-        //System.out.println("Step 1: Required\n");
-        ArrayList<Course> required = new ArrayList();
-        for (int i = 0; i < all.length; i++) {
-            if (taken.size() > 0) {
-                for (int j = 0; j < taken.size(); j++) {
-                    if (taken.get(j) == all[i]) // Current course being evaluated has been taken
-                    {
-                        break;
-                    }
-                    if (j == taken.size() - 1) // Current course has not been taken and needs to be added
-                    {
-                        required.add(all[i]);
-                    }
-                }
-            }
-            else {
-                required.add(all[i]);
-            }
+    public static List<Semester> generateSequence(List<Course> taken, List<Course> required) 
+    {
+    	/* Step 1: Verify if any courses in taken list correspond to required.
+    	 * If True, remove the corresponding course from required list.
+    	 */
+        if (taken.size() > 0) 
+        {
+        	for (int i = 0; i < required.size(); i++) 
+        	{
+        		for (int j = 0; j < taken.size(); j++) 
+        		{
+        			if (taken.get(j).getCourseCode().equals(required.get(i).getCourseCode()))
+        				required.remove(i);
+        		}
+        	}
         }
 
-        
-        // Step 2: Set Priority
-        //System.out.println("Step 2: Priority\n");
+        /* Step 2: Set the level of priority to each course within the required list.
+         * See setPriority() method for more details.
+         */
         for (int i = 0; i < required.size(); i++)
             setPriority(required.get(i), required); 
-        
-        System.out.println("Showing Priorities");
-        for (int i = 0; i < required.size(); i++) {
-            System.out.println(required.get(i).getCourseName() + " " + required.get(i).getPriority());
-        }
-        System.out.println();
-
-        
-        // Step 3: Generate Sequence
-        //System.out.println("Step 3: Sequence\n");
-        ArrayList<Semester> sequence = new ArrayList(); 
-        
+      
+        /* Step 3: Generate the sequence.
+         * This is achieved by iterating over the required list of courses until it is depleted.
+         * The available list contains courses from the required list that currently have all
+         * of their prerequisites satisfied and can be added to a semester's courses[]. 
+         */ 
         int year = 2019;
         int season = 0; 
         int creditCap = 15; 
         
-        ArrayList<Course> available = new ArrayList(); // List of all available courses
+        List<Semester> sequence = new ArrayList<Semester>();
+        List<Course> available = new ArrayList<Course>();
         
-        int counter = 0;
-        while (!required.isEmpty() || !available.isEmpty()) {
+        while (!required.isEmpty() || !available.isEmpty()) 
+        {   
 
-            
+        	//See updateAvailability() method for more details.
             updateAvailability(taken, required, available);
-            
-//            System.out.println("\nIteration " + ++counter);
-//            System.out.println("Showing sorted available");
-//            System.out.print("[ ");
-//            for (int i = 0; i < available.size(); i++)
-//                System.out.print(available.get(i).getCourseName() + " "); 
-//            System.out.println("]");
             
             int totalCredits = 0;
             
-            ArrayList<Course> registeredCourses = new ArrayList(); 
+            List<Course> registeredCourses = new ArrayList<Course>(); 
             
-            for (int i = 0; i < available.size(); i++) {
+            for (int i = 0; i < available.size(); i++) 
+            {
                 Course highestAvailable = available.get(i);
                 
                 registeredCourses.add(highestAvailable);
                 taken.add(highestAvailable);
-                totalCredits += highestAvailable.getCredits();
+                totalCredits += highestAvailable.getCreditUnits();
                 available.remove(i--);
 
                 if (totalCredits >= creditCap)
@@ -190,7 +145,8 @@ public class Sequencer {
             
             String currentSeason = ""; 
             
-            switch ((season++) % 3) {
+            switch ((season++) % 3) 
+            {
                 case(0):
                     currentSeason = "Fall";
                     break;
@@ -206,13 +162,6 @@ public class Sequencer {
             }
             
             Semester currentSemester = new Semester(currentSeason, year, registeredCourses);
-  
-//            System.out.println("Semester " + counter);
-//            System.out.print("[ ");
-//            for (int i = 0; i < currentSemester.getCourses().size(); i++)
-//                System.out.print(currentSemester.getCourses().get(i).getCourseName() + " ");
-//            System.out.println("]\n");
-            
             sequence.add(currentSemester); 
         }
         

@@ -3,18 +3,16 @@ package skynet.coordinator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import skynet.filter.courseFilter;
 import skynet.scheduler.common.*;
 import services.*;
+import skynet.sequencer.*;
 
 public class Coordinator 
 {	
 	private static List<ICourse> fetchedCourses;
 	private static CourseService service;
-	private static IPrereqFiller filler;
-	private static ISequencer sequencer;
-	private static List<ISemester> sequence;
+	private static List<Semester> sequence;
 	
 	/* Entry point of the core logic */
 	/* Main will return the completed list of Semester objects to the server */
@@ -28,8 +26,6 @@ public class Coordinator
 		 * without having access to the other modules */
 		fetchedCourses = new ArrayList<ICourse>();
 		service = new CourseService("132","6a388ea97bb3d994c699760a7ee01472");
-		filler = null;
-		sequencer = null;
 		
 		/* When the server calls our application, it passes with it an argument 
 		 * which indicates for which program we want a sequence 
@@ -40,32 +36,74 @@ public class Coordinator
 		switch(args[0])
 		{
 		case "SOEN":
-			fetchedCourses = service.getCoursesForProgram("SOEN");
-			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("ENGR"));
-			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("ENCS"));
+			fetchedCourses = service.getCoursesForProgram("SOEN",courseFilter.getFilterForProgram(args[0]));
+			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("ENGR",courseFilter.getFilterForProgram(args[0])));
+			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("ENCS",courseFilter.getFilterForProgram(args[0])));
+			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("COMP",courseFilter.getFilterForProgram(args[0])));
 			break;
 		case "COMP":
-			fetchedCourses = service.getCoursesForProgram("COMP");
-			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("ENCS"));
+			fetchedCourses = service.getCoursesForProgram("COMP",courseFilter.getFilterForProgram(args[0]));
+			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("ENCS",courseFilter.getFilterForProgram(args[0])));
 			break;
 		default:
 			return;
 		}
 		
-		/* Once the courses fetched, call the populatePrereq() method to
-		 * fill the prerequisites course arrays within each ICourse object. */
-		//fetchedCourses = filler.populatePrereq(fetchedCourses);
-		
 		/* The next step is to filter out all the courses that are not required for
 		 * specified degree */
-		fetchedCourses = courseFilter.FilterListForProgram(args[0], fetchedCourses);
+		fetchedCourses = courseFilter.FilterListForProgram(args[0], fetchedCourses, courseFilter.getFilterForProgram(args[0]));
 		
-		/* Finally, the list of courses is passed to the sequencer which returns 
-		 * a compatible list of semester objects */
-		/* Not exactly sure how the server will be able to fetch this list of semesters 
-		 * since this is a main function... Need some clarification. */
-		//sequence = sequencer.generateSequence(fetchedCourses);
+		/* This is a debug tool output.
+		 * Outputs every course object in the filteredList as well as its
+		 * prerequisites.
+		 * */
+		for(int i = 0; i < fetchedCourses.size(); ++i)
+		{
+			System.out.println("Course: "+fetchedCourses.get(i).getCourseCode());
+			for(int j = 0; j < fetchedCourses.get(i).getPrerequisites().length; ++j)
+				System.out.println(fetchedCourses.get(i).getPrerequisitesAsCourseCodes()[j]);
+			System.out.println();
+		}
 		
+		/* TEMPORARY FIX: A list of Taken courses is passed to the sequencer
+		 * These courses are pre-UnderGrad requirements */
+		List<Course> taken = new ArrayList<Course>();
+		addCourse("MATH", "202", taken); 
+		addCourse("MATH", "203", taken);
+		addCourse("MATH", "205", taken);
+		addCourse("MATH", "204", taken);
+		addCourse("PHYS", "205", taken);
+		
+		/* TEMPORARY FIX: These added course are specifically problematic.
+		 * Without them, the program loops in the sequencer loop forever.
+		 * ENCS272 is needed since ENCS 282 requires it.
+		 * Need to find a way to also implement the EWT requirement */
+		addCourse("ENCS", "272", taken);
+		
+		/* Convert List of ICourse to a Compatible List of Course objects */
+		List<Course> ConvertedList = new ArrayList<Course>();
+		for(ICourse i : fetchedCourses)
+			ConvertedList.add((Course)i);
+		
+		/* Finally, Generate a sequence */
+		sequence = Sequencer.generateSequence(taken, ConvertedList);
+		
+		/* Display the Sequence */
+        System.out.println("Displaying Sequence");
+        for (Semester i : sequence)
+        {
+        	System.out.println(" Semester : " + i.getSeason());
+        	for(ICourse c : i.getCoursesScheduled())
+        		System.out.println("\t" + c.getCourseCode());
+        }
 		return;
+	}
+	
+	/* Temporary debug method */
+	private static void addCourse(String program, String code, List<Course> course)
+	{
+		Course c = new Course(); 
+		c.setCourseCode(program + " " + code);		
+		course.add(c);
 	}
 }
