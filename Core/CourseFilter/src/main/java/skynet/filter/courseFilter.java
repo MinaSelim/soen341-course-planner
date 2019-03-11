@@ -1,6 +1,7 @@
 package skynet.filter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,19 +17,19 @@ public class courseFilter
 	 * @param Program String representing the program for which to filter the list
 	 * @param unfilteredCourses List containing all generic ICourse objects to be filtered
 	 * @return List<ICourse>
-	 * @throws IOException
 	 */
-	public static List<ICourse> FilterListForProgram(String Program, List<ICourse> unfilteredCourses) throws IOException
+	public static List<ICourse> FilterListForProgram(String Program, List<ICourse> unfilteredCourses, List<String> filter) throws IOException
 	{
-		//Safety check to avoid iterating through a null list
+		//If unfilteredCourses is null, return empty list.
 		if(unfilteredCourses == null)
 			return new ArrayList<ICourse>();
+
 		
 		//The output list of the method
 		List<ICourse> filteredCourses = new ArrayList<ICourse>();
 		
 		//The local String buffer to avoid reading from a file for every line check
-		List<String> filter = new ArrayList<String>();
+		filter = new ArrayList<String>();
 		
 		//Open the filter.txt file
 		Scanner fileReader = new Scanner(new File("../CourseFilter/src/main/java/skynet/filter/"+Program+"filter.txt"));
@@ -47,5 +48,25 @@ public class courseFilter
 		}
 	
 		return filteredCourses;
+	}
+	
+	/**
+	 * 
+	 * Returns a List of Strings that reflect the corresponding txt filter.
+	 * Mostly used for OR case filtering during API fetching
+	 * @param program String representing the appropriate program filter needed
+	 * @return ArrayList<String>
+	 */
+	public static ArrayList<String> getFilterForProgram(String program) throws FileNotFoundException
+	{
+		ArrayList<String> filter = new ArrayList<String>();
+
+		Scanner fileReader = new Scanner(new File("../CourseFilter/src/main/java/skynet/filter/"+program+"filter.txt"));
+
+		while(fileReader.hasNextLine()) filter.add(fileReader.nextLine());
+		
+		fileReader.close();
+		
+		return filter;
 	}
 }

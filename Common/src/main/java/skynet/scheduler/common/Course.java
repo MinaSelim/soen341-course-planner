@@ -1,34 +1,32 @@
-package models.implementations;
-
-
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+package skynet.scheduler.common;
 
 import skynet.scheduler.common.ICourse;
 import skynet.scheduler.common.SemesterSeasons;
 
-public class Course implements ICourse {
-
+public class Course implements ICourse 
+{
     private String courseName;
     private String courseTitle;
     private String courseID;
-
-
     private String[] StringPrerequisites;
     private String courseSubject;
     private String courseCatalog;
     private String academicCareer;
-
     private double creditUnits;
-
     private ICourse[] prereq;
-
+    private int priority;
 
     public Course(){}
 
-    public Course(String courseName, String courseTitle, String courseID, String[] prerequisites, String courseSubject, String courseCatalog, int creditUnits, String academicCareer) {
+    public Course(String courseName,
+    		String courseTitle,
+    		String courseID,
+    		String[] prerequisites,
+    		String courseSubject,
+    		String courseCatalog,
+    		int creditUnits,
+    		String academicCareer) 
+    {
         this.courseName = courseName;
         this.courseTitle = courseTitle;
         this.courseID = courseID;
@@ -37,24 +35,16 @@ public class Course implements ICourse {
         this.courseCatalog = courseCatalog;
         this.creditUnits = creditUnits;
         this.academicCareer = academicCareer;
-
         this.prereq = new ICourse[StringPrerequisites.length];
-    }
-
-    public ICourse[] getPrereq() {
-        return prereq;
-    }
-
-    public String getCourseName() {
-        return courseName;
+        this.priority = 0;
     }
 
     public String getCourseTitle() {
-        return null;
+        return courseTitle;
     }
 
     public String getCourseID() {
-        return "";
+        return courseID;
     }
 
     public String getCourseSubject() {
@@ -66,51 +56,72 @@ public class Course implements ICourse {
     }
 
     public String getAcademicCareer() {
-        return null;
+        return academicCareer;
+    }
+    
+	public void setCourseCode(String code){
+		String[] codes = code.split(" "); 
+		
+		courseSubject = codes[0];
+		courseCatalog = codes[1];	
+	}
+	
+	public void setPrerequisites(ICourse[] prereq){
+        this.prereq = prereq;
+    }
+	
+	public void incrementPriority(){
+		priority++; 
+	}
+
+    public int getPriority(){ 
+    	return priority; 
     }
 
+    /*
+     * Interface method Implementations
+     * --------------------------------
+     */
+    
+    @Override
+    public String getCourseName() {
+        return courseName;
+    }
+    
+    @Override
     public SemesterSeasons[] getCourseAvailability() {
+    	//TO-DO
         return null;
     }
 
+    @Override
     public SemesterSeasons[] getEngineerAvailability() {
+    	//TO-DO
         return null;
     }
 
     @Override
     public String toString(){
-
-        String[] info = new String[StringPrerequisites.length];
-        //info = StringPrerequisites.toArray(info);
-
-        return courseSubject + "" + courseCatalog + "; ";// + Arrays.toString(info);
+        return courseSubject + "" + courseCatalog + "; ";
     }
 
 	@Override
 	public ICourse[] getPrerequisites() {
-		// TODO Auto-generated method stub
 		return prereq;
 	}
 
 	@Override
 	public String[] getPrerequisitesAsCourseCodes() {
-		// TODO Auto-generated method stub
 		return StringPrerequisites;
 	}
 
 	@Override
 	public String getCourseCode() {
-		// TODO Auto-generated method stub
 		return courseSubject+courseCatalog;
 	}
-
+	
 	@Override
 	public double getCreditUnits() {
-		// TODO Auto-generated method stub
 		return creditUnits;
 	}
-
-	public void setPrerequisites(ICourse[] prereq){
-        this.prereq = prereq;
-    }
 }
