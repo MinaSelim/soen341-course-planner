@@ -95,7 +95,7 @@ public class ConcordiaApiParser
         content = content.replaceAll("(?i)NeverTaken" , "NT:");
         content = content.replaceAll("(?i)Course" , "");
 
-          System.out.println("Content String after reformatting = " + content);
+         // System.out.println("Content String after reformatting = " + content);
 
 
         //Create Patterns
@@ -117,7 +117,7 @@ public class ConcordiaApiParser
         if(neverTakenMatcher.find()){
 
             String ntreqs = neverTakenMatcher.group(0);
-            System.out.println("Never Taken requirements = " + ntreqs);
+            //System.out.println("Never Taken requirements = " + ntreqs);
             ArrayList<String> neverTaken = new ArrayList<String>();
             Matcher courseSerieMatcher = courseSeriePattern.matcher(ntreqs);
 
@@ -159,7 +159,7 @@ public class ConcordiaApiParser
            requirements.put("never taken" , neverTaken);
 
 
-           System.out.println(Arrays.toString(neverTaken.toArray()));
+           //System.out.println(Arrays.toString(neverTaken.toArray()));
         }
 
 
@@ -167,7 +167,7 @@ public class ConcordiaApiParser
         if(prereqMatcher.find()){
 
             String prereqs  = prereqMatcher.group(0);
-            System.out.println("Prerequisite requirements = " + prereqs);
+            //System.out.println("Prerequisite requirements = " + prereqs);
             ArrayList<String> prerequisites = new ArrayList<String>();
             Matcher courseSerieMatcher = courseSeriePattern.matcher(prereqs);
 
@@ -208,13 +208,13 @@ public class ConcordiaApiParser
 
            requirements.put("prereqs", prerequisites);
 
-           System.out.println("PREREQUISITES = " + Arrays.toString(prerequisites.toArray()));
+           //System.out.println("PREREQUISITES = " + Arrays.toString(prerequisites.toArray()));
 
         }
 
         if(coreqMatcher.find()){
             String coreqs  = coreqMatcher.group(0);
-            System.out.println("Corequisite Requirements = " + coreqs);
+            //System.out.println("Corequisite Requirements = " + coreqs);
             ArrayList<String> corequisites = new ArrayList<String>();
             Matcher courseSerieMatcher = courseSeriePattern.matcher(coreqs);
 
@@ -254,7 +254,7 @@ public class ConcordiaApiParser
 
            requirements.put("coreqs" , corequisites); 
 
-           System.out.println("COREQUISITES = " + Arrays.toString(corequisites.toArray()));
+           //System.out.println("COREQUISITES = " + Arrays.toString(corequisites.toArray()));
 
         }
 
