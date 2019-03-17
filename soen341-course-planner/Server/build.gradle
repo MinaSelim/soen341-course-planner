@@ -1,0 +1,68 @@
+buildscript {
+	
+	ext{
+	springBootVersion = '2.1.2.RELEASE'
+	}
+	
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+import org.apache.tools.ant.taskdefs.condition.Os
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+
+bootJar {
+   baseName = 'Spring-Server'
+   version =  '0.1.0'
+}
+
+group = 'PracticeServer'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+task npmInstall(type: Exec) {
+   	String npmCommand = (Os.isFamily(Os.FAMILY_WINDOWS)) ? 'npm.cmd' : 'npm'
+    commandLine npmCommand, 'install'
+}
+
+task webpack(type: Exec) {
+   dependsOn npmInstall
+   inputs.dir("React")
+   inputs.file("webpack.config.js")
+   outputs.dir("./src/main/resources/static")
+   outputs.dir("./build/resources/main/static")   
+   
+   String webpackCall = (Os.isFamily(Os.FAMILY_WINDOWS)) ? "$projectDir/node_modules/.bin/webpack.cmd" : "$projectDir/node_modules/.bin/webpack"
+   commandLine webpackCall , "./React/js/index.js"
+
+   doLast{
+      copy {
+         from "./src/main/resources/static"
+         into "./build/resources/main/static"
+      }
+   }
+}
+
+bootRun.dependsOn webpack
+
+
+dependencies {
+	npmInstall
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+
