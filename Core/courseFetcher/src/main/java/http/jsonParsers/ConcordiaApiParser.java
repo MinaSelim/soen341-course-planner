@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import availability.Availability;
 import skynet.scheduler.common.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -167,5 +168,36 @@ public class ConcordiaApiParser
             index = content.indexOf("requisite", start + 1);
 
         return index;
+    }
+
+    public static List<Availability> getAvailability(List<String> yearsToAdd, String response){
+
+        List<Availability> availabilities = new ArrayList<>();
+
+        JsonElement httpContent = new JsonParser().parse(response);
+        JsonArray elements = httpContent.getAsJsonArray();
+
+        for(int i = 0; i < elements.size(); i++) {
+            JsonObject obj = elements.get(i).getAsJsonObject();
+
+            String des = obj.get("termDescription").getAsString();
+
+            boolean skip = true;
+
+            for (String s: yearsToAdd)
+                if(des.indexOf(s) != -1) {
+                    skip = false;
+                    break;
+                }
+            if(!skip){
+                String termCode = obj.get("termCode").getAsString();
+                String ses = obj.get("sessionCode").getAsString();
+                String sesDes = obj.get("sessionDescription").getAsString();
+
+                availabilities.add(new Availability(termCode, des, ses, sesDes));
+            }
+        }
+        return availabilities;
+
     }
 }

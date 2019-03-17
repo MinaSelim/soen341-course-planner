@@ -15,7 +15,6 @@ import java.util.concurrent.Executors;
 public class ConcurrentCourseFetcher {
 
     //This coursefetcher will at max utilize a total of 10 threads
-
     private static ExecutorService executor;
 
     //Set the pool size to 20

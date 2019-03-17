@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import availability.Availability;
 import http.HttpClient;
 import http.jsonParsers.ConcordiaApiParser;
 import optimization.ConcurrentCourseFetcher;
@@ -25,7 +27,9 @@ public class CourseService
     @SuppressWarnings("unused")
 	private static final String COURSE_SECTION = "https://opendata.concordia.ca/API/v1/course/section/filter/{subject}/{catalog}";
     @SuppressWarnings("unused")
-	private static final String COURSE_SCHEDULE = "https://opendata.concordia.ca/API/v1/course/schedule/filter/{courseid}/{subject}/{catalog}";
+	private static final String COURSE_SCHEDULE = "https://opendata.concordia.ca/API/v1/course/schedule/filter/%s/%s/%s";
+    private static final String COURSE_SESSION = "https://opendata.concordia.ca/API/v1/course/session/filter/%s/%s/%s";
+
     private HttpClient httpClient;
 
     /**
@@ -77,7 +81,6 @@ public class CourseService
     public List<ICourse> getCourses(List<String> codes){
         return ConcurrentCourseFetcher.getCourses(codes, this);
     }
-
 
 
     @SuppressWarnings("unused")
@@ -143,5 +146,19 @@ public class CourseService
         for(String preCode: pre)
             if(preCode.equals(code));
         return false;
+    }
+
+    public List<Availability> getAvailablitity(int year) throws IOException {
+
+        List<String> years = new ArrayList<>();
+        years.add(year + "");
+        years.add((year + 1)+ "");
+        years.add((year + 2)+ "");
+
+        String url = String.format(COURSE_SESSION, "UGRD", "*", "*");
+        String httpResponse = httpClient.get(url);
+
+        return ConcordiaApiParser.getAvailability(years, httpResponse);
+
     }
 }
