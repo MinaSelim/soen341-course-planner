@@ -38,20 +38,20 @@ public class Coordinator
 		 * Obviously, this is very bare bones for now, later on we can add more arguments
 		 * for information on already completed courses which the user has specified
 		 * on the front end.*/
-		
+
 		ArrayList<String> requiredCourses = CourseFilter.getFilterForProgram(args[0]);
-		
+
 		ArrayList<String> requiredCourseCodesForQuery = getQueryCourseCodes(requiredCourses);
-		
+
 		ArrayList<CoursesFetcherThread> fetchers = new ArrayList<CoursesFetcherThread>();
-		
+
 		for(String courseCode : requiredCourseCodesForQuery)
 		{
 			CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses);
 			fetcher.start();
 			fetchers.add(fetcher);
 		}
-		
+
 		for(CoursesFetcherThread t1 : fetchers)
 		{
 			try {
@@ -61,9 +61,9 @@ public class Coordinator
 				e.printStackTrace();
 			}
 		}
-		
-		
-		
+
+
+
 		/* The next step is to filter out all the courses that are not required for
 		 * specified degree */
 		fetchedCourses = CourseFilter.FilterListForProgram(fetchedCourses, requiredCourses);
@@ -106,7 +106,7 @@ public class Coordinator
 		
 		// add special courses
 		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
-		
+
 		/* Finally, Generate a sequence */
 		sequence = Sequencer.generateSequence(taken, ConvertedList);
 		
@@ -128,27 +128,27 @@ public class Coordinator
 		c.setCourseCode(program + " " + code);		
 		course.add(c);
 	}
-	
+
 	private static ArrayList<String> getQueryCourseCodes(List<String> requiredCourses)
 	{
 		ArrayList<String> courseCodes = new ArrayList<String>();
 		for(String courseCode : requiredCourses)
 		{
-			if(!(courseCodes.contains(courseCode.substring(0, 4))) && 
+			if(!(courseCodes.contains(courseCode.substring(0, 4))) &&
 			   !(courseCode.substring(0,4).equals("SPEC")))
 			{
 				courseCodes.add(courseCode.substring(0, 4));
 			}
 		}
-		
+
 		return courseCodes;
 	}
-	
+
 	static synchronized void addToFetchedCourses(List<ICourse> courses)
 	{
 		fetchedCourses.addAll(courses);
 	}
-	
+
 	static CourseService getCourseService()
 	{
 		return service;

@@ -1,5 +1,4 @@
 package http.jsonParsers;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +6,9 @@ import java.util.List;
 import availability.Availability;
 import availability.AvailabilityProvider;
 import services.CourseService;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import skynet.scheduler.common.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -56,7 +58,7 @@ public class ConcordiaApiParser
         	System.out.println("");
 
         if(prereq != null)
-            getPrereq(prereq.getAsString(), pre);
+            pre = getRequirements(prereq.getAsString()).get("prereqs");
 
         String[] preArray = new String[pre.size()];
         pre.toArray(preArray);
@@ -78,86 +80,186 @@ public class ConcordiaApiParser
         return course;
     }
 
-    public static void getPrereq(String content, List<String> course) 
-    {
-    	//Depending on if the course has prereqs or coreqs, or both, key is assigned a specific string
-    	String key = null;
-        if(content.indexOf("Prerequisite") != -1)
-        {
-        	key = "Prerequisite:";
-        }
-        else if(content.indexOf("Corequisite") != -1)
-        {
-        	key = "Corequisite:";
-        }
-        else
-        	return;
+    public static HashMap<String,ArrayList<String>> getRequirements(String content){
 
-        //Remove all spaces
-        content = content.replaceAll(" ", "");
-        int start = content.indexOf(key);
+        HashMap<String , ArrayList<String>> requirements = new  HashMap<String , ArrayList<String>>();
 
-        //handle other case
-        if(start == -1) {
-            start = content.indexOf("Prerequisite ");
-        }
-
-        if(start != -1)
-            start += key.length();
-        else
-            return; //nothing to read
-
-        //Added Logic here - Derek
-        content = content.replace(';', ',');
-        content = content.replace('.', ',');
-        content = content.replaceAll("and", ",");
-        content = content.replaceAll("previouslyorconcurrently", "");
-        content = content.replaceAll("orequivalent", "");
-        if(content.contains("Youmustcomplete1ofthefollowingcourses"))
-        {
-        	int count = 1;
-        	while(content.indexOf(",", content.indexOf("Youmustcomplete1ofthefollowingcourses")) != -1)
-        	{
-        		String ModifiedEnd = content.substring(content.indexOf("Youmustcomplete1ofthefollowingcourses"), content.length()).replaceFirst(",", "or"+count++);
-        		content = content.replaceAll(content.substring(content.indexOf("Youmustcomplete1ofthefollowingcourses"), content.length()), ModifiedEnd);
-        	}
-        }
-        content = content.replaceAll("Youmustcomplete1ofthefollowingcourses", "");       
-
-        //Never Taken
-        int end1 = getEnd(content, start);
-        int end2 = content.indexOf("Never", start + 1);
-
-        int end  = 0;
-
-        //Ensure to grab content for Prereq only. (Done because Http response not structured properly)
-        if(end1 == -1) {
-            if(end2 != -1)
-                end = end2;
-        }else{
-            if(end2 == -1)
-                end = end1;
-            else
-            {
-                if(end2 < end1)
-                    end = end2;
-                else
-                    end = end1;
-            }
-        }
-
-        if(start > end)
-            end = content.length();
+        //inforcing universal formating on the requirements strings
+        //Format example : 
         
-        String courseStr = content.substring(start, end);
-        //courseStr = courseStr.replaceAll(" ", "");
-        String[] pre = courseStr.split(",");
+        content = content.replaceAll("-","");
+        content = content.replaceAll("\\s|;|:|,|/|and" , "");
+        content = content.replaceAll("(?i)Prerequisite","P:");
+        content = content.replaceAll("(?i)Corequisite", "C:");
+        content = content.replaceAll("(?i)notregistered" , "");
+        content = content.replaceAll("(?i)NeverTaken" , "NT:");
+        content = content.replaceAll("(?i)Course" , "");
 
-        for(String c : pre) {
-            String code = c.trim();
-            if(!code.equals(""))
-                course.add(c.trim());
+          System.out.println("Content String after reformatting = " + content);
+
+
+        //Create Patterns
+        Pattern neverTakenPattern = Pattern.compile("NT:(?:[A-Za-z]{4}(?:[0-9]{3})+(?:or)*)*");
+        Pattern coreqPattern = Pattern.compile("C:(?:[A-Za-z]{4}(?:[0-9]{3})+(?:or)*)*");
+        Pattern prereqPattern = Pattern.compile("P:(?:[A-Za-z]{4}(?:[0-9]{3})+(?:or)*)*");
+        Pattern courseSeriePattern = Pattern.compile("(?<!or)[A-Za-z]{4}(?:[0-9]{3})+(?!or)");
+        Pattern courseAlphaPattern = Pattern.compile("[A-Za-z]{4}");
+        
+
+        //Create Matchers
+        Matcher neverTakenMatcher = neverTakenPattern.matcher(content);
+        Matcher  coreqMatcher = coreqPattern.matcher(content);
+        Matcher  prereqMatcher = prereqPattern.matcher(content);
+
+
+        String courseLetterCode = new String();
+
+        if(neverTakenMatcher.find()){
+
+            String ntreqs = neverTakenMatcher.group(0);
+            System.out.println("Never Taken requirements = " + ntreqs);
+            ArrayList<String> neverTaken = new ArrayList<String>();
+            Matcher courseSerieMatcher = courseSeriePattern.matcher(ntreqs);
+
+
+            while(courseSerieMatcher.find()){
+                String courseSerie = courseSerieMatcher.group(0);
+
+                Matcher letterCodeMatcher = Pattern.compile("[A-Za-z]{4}").matcher(courseSerie);
+                if(letterCodeMatcher.find())
+                    courseLetterCode = letterCodeMatcher.group(0);
+
+                Matcher numericCodeMatcher =Pattern.compile("[0-9]{3}").matcher(courseSerie);
+
+                while(numericCodeMatcher.find()){
+                    neverTaken.add(courseLetterCode + numericCodeMatcher.group(0));
+                }
+
+                ntreqs = ntreqs.replaceAll(courseSerie , "");
+
+            }
+
+
+            ntreqs = ntreqs.replaceAll("NT:" , "");
+
+            Matcher splitMatcher = Pattern.compile("(?:[A-Za-z]{4}[0-9]{3}){2}").matcher(ntreqs);
+
+            StringBuilder ntreqsSb = new StringBuilder(ntreqs);
+                
+            if(splitMatcher.find()){
+
+                ntreqsSb.insert((splitMatcher.end()+splitMatcher.start())/2,"#");
+                ntreqs = ntreqsSb.toString();
+            } 
+
+           ArrayList<String> alternativeNtreqs = new ArrayList<String>(Arrays.asList(ntreqs.split("#")));
+
+           neverTaken.addAll(alternativeNtreqs);
+
+           requirements.put("never taken" , neverTaken);
+
+
+           System.out.println(Arrays.toString(neverTaken.toArray()));
         }
+
+
+
+        if(prereqMatcher.find()){
+
+            String prereqs  = prereqMatcher.group(0);
+            System.out.println("Prerequisite requirements = " + prereqs);
+            ArrayList<String> prerequisites = new ArrayList<String>();
+            Matcher courseSerieMatcher = courseSeriePattern.matcher(prereqs);
+
+            while(courseSerieMatcher.find()){
+                String courseSerie = courseSerieMatcher.group(0);
+
+                Matcher letterCodeMatcher = Pattern.compile("[A-Za-z]{4}").matcher(courseSerie);
+
+                if(letterCodeMatcher.find())
+                    courseLetterCode = letterCodeMatcher.group(0);
+
+                Matcher numericCodeMatcher =Pattern.compile("[0-9]{3}").matcher(courseSerie);
+
+                while(numericCodeMatcher.find()){
+                    prerequisites.add(courseLetterCode + numericCodeMatcher.group(0));
+                }
+
+                prereqs = prereqs.replaceAll(courseSerie , "");
+
+            }
+
+
+            prereqs = prereqs.replaceAll("P:" , "");
+
+            Matcher splitMatcher = Pattern.compile("(?:[A-Za-z]{4}[0-9]{3}){2}").matcher(prereqs);
+
+            StringBuilder prereqsSb = new StringBuilder(prereqs);
+                
+            if(splitMatcher.find()){
+        
+                prereqsSb.insert((splitMatcher.end()+splitMatcher.start())/2,"#");
+                prereqs = prereqsSb.toString();
+            } 
+
+           ArrayList<String> alternativePrereqs = new ArrayList<String>(Arrays.asList(prereqs.split("#")));
+
+           prerequisites.addAll(alternativePrereqs);
+
+           requirements.put("prereqs", prerequisites);
+
+           System.out.println("PREREQUISITES = " + Arrays.toString(prerequisites.toArray()));
+
+        }
+
+        if(coreqMatcher.find()){
+            String coreqs  = coreqMatcher.group(0);
+            System.out.println("Corequisite Requirements = " + coreqs);
+            ArrayList<String> corequisites = new ArrayList<String>();
+            Matcher courseSerieMatcher = courseSeriePattern.matcher(coreqs);
+
+            while(courseSerieMatcher.find()){
+                String courseSerie = courseSerieMatcher.group(0) ;
+
+                Matcher letterCodeMatcher = Pattern.compile("[A-Za-z]{4}").matcher(courseSerie);
+                if(letterCodeMatcher.find())
+                    courseLetterCode = letterCodeMatcher.group(0);
+
+                Matcher numericCodeMatcher =Pattern.compile("[0-9]{3}").matcher(courseSerie);
+
+                while(numericCodeMatcher.find()){
+                    corequisites.add(courseLetterCode + numericCodeMatcher.group(0));
+                }
+
+                coreqs = coreqs.replaceAll(courseSerie , "");
+
+
+            }
+
+            coreqs = coreqs.replaceAll("C:" , "");
+
+            Matcher splitMatcher = Pattern.compile("(?:[A-Za-z]{4}[0-9]{3}){2}").matcher(coreqs);
+
+            StringBuilder coreqsSb = new StringBuilder(coreqs);
+                
+            if(splitMatcher.find()){
+
+                coreqsSb.insert((splitMatcher.end()+splitMatcher.start())/2,"#");
+                coreqs = coreqsSb.toString();
+            } 
+
+           ArrayList<String> alternativeCoreqs = new ArrayList<String>(Arrays.asList(coreqs.split("#")));
+
+           corequisites.addAll(alternativeCoreqs);
+
+           requirements.put("coreqs" , corequisites); 
+
+           System.out.println("COREQUISITES = " + Arrays.toString(corequisites.toArray()));
+
+        }
+
+        return requirements;
+
     }
 
     private static int getEnd(String content, int start)

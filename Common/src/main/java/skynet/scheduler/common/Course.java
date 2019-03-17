@@ -78,9 +78,6 @@ public class Course implements ICourse
 		priority++; 
 	}
 
-    public int getPriority(){ 
-    	return priority; 
-    }
 
     /*
      * Interface method Implementations
@@ -135,5 +132,11 @@ public class Course implements ICourse
 	@Override
 	public double getCreditUnits() {
 		return creditUnits;
-	}
+    }
+    
+
+    @Override
+    public int getPriority(){ 
+    	return priority; 
+    }
 }
