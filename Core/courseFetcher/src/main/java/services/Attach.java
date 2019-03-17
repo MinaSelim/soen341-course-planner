@@ -43,9 +43,7 @@ public class Attach
 
     private void attach(Course course, String[] prereq, HashMap<String, ICourse> lookup) throws IOException 
     {
-        if(prereq == null || prereq.length == 0)
-            return;
-        else 
+        if(prereq != null && prereq.length != 0)
         {
         	if(course.getCourseCode() == "ENGR391")
         		System.out.println();
@@ -55,13 +53,12 @@ public class Attach
             {
                 String parsedCode = parsePrereq(code);
                 //fix spacing issue
-                if(parsedCode.indexOf(" ") == -1) 
+                if(!parsedCode.equals(""))
                 {
                     Course prereqCourse = (Course)getCourse(parsedCode, lookup);
                     if(prereqCourse != null) 
                     {
                         prerequisites[counter]= prereqCourse;
-                        attach(prereqCourse, prereqCourse.getPrerequisitesAsCourseCodes(), lookup);
                         counter++;
                     }
                 }
@@ -73,6 +70,37 @@ public class Attach
                     prerequisites = Arrays.copyOf(prerequisites, counter);
             
             course.setPrerequisites(prerequisites);
+        }
+        attachCorequisites(course, course.getCorequisitesAsCourseCodes(), lookup);
+    }
+
+    private void attachCorequisites(Course course, String[] coreqs, HashMap<String, ICourse> lookup) throws IOException
+    {
+        if(coreqs != null && coreqs.length != 0)
+        {
+            ICourse[] corequisites = new ICourse[coreqs.length];
+            int counter = 0;
+            for (String code : coreqs)
+            {
+                String parsedCode = parsePrereq(code);
+                //fix spacing issue
+                if(!parsedCode.equals(""))
+                {
+                    Course coreqCourse = (Course)getCourse(parsedCode, lookup);
+                    if(coreqCourse != null)
+                    {
+                        corequisites[counter]= coreqCourse;
+                        counter++;
+                    }
+                }
+            }
+            if(counter == 0 )
+                corequisites = Arrays.copyOf(corequisites, 0);
+            else
+                if(counter < coreqs.length)
+                    corequisites = Arrays.copyOf(corequisites, counter);
+
+            course.setCorequisites(corequisites);
         }
     }
     //if string contains the word 'or' it will only take the that pertains to the program code
@@ -96,10 +124,16 @@ public class Attach
         }
         else if(code.contains("or"))
         {
-        	if(filter.contains(code.substring(0,code.indexOf("or"))))
-        		return code.substring(0,code.indexOf("or"));
-        	else
-        		return code.substring(code.indexOf("or")+2, (code.indexOf("or")+2+COURSE_CODE_LENGTH));
+            String[] equivalentPrereqs = code.split("or");
+            if(equivalentPrereqs.length == 1)
+                return equivalentPrereqs[0];
+            else {
+                for (String equivalentPrereq : equivalentPrereqs) {
+                    if (filter.contains(equivalentPrereq))
+                        return equivalentPrereq;
+                }
+                return equivalentPrereqs[1];
+            }
         }
         return code;
     }
@@ -114,8 +148,10 @@ public class Attach
         else 
         {
             course = getNewCourseFromAPI(code);
-            if(course != null)
+            if (course != null){
                 lookup.put(course.getCourseCode(), course);
+                attach((Course) course, course.getPrerequisitesAsCourseCodes(), lookup);
+            }
         }
         return course;
     }

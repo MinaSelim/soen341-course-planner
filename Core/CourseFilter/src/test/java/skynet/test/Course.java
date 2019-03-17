@@ -11,6 +11,7 @@ public class Course implements ICourse
 	private double creditUnits;
 	private SemesterSeasons[] availability;
 	private SemesterSeasons[] taughtByEngineer;
+	private int priority;
 	
 	
 	public Course(String name, String code, double credits)
@@ -65,5 +66,11 @@ public class Course implements ICourse
 		// TODO Auto-generated method stub
 		return taughtByEngineer;
 	}
+
+
+    @Override
+    public int getPriority(){ 
+    	return priority; 
+    }
 
 }

@@ -65,6 +65,12 @@ public class Coordinator
 				e.printStackTrace();
 			}
 		}
+
+
+
+		/* The next step is to filter out all the courses that are not required for
+		 * specified degree */
+		fetchedCourses = CourseFilter.FilterListForProgram(fetchedCourses, requiredCourses);
 		
 		/* Next, Attach the available seasons to each course object in the filtered List
 		 */
@@ -82,7 +88,8 @@ public class Coordinator
 			System.out.println();
 		}
 		
-		/* Declare a list of already taken courses. Empty by Default */
+		/* TEMPORARY FIX: A list of Taken courses is passed to the sequencer
+		 * These courses are pre-UnderGrad requirements */
 		List<Course> taken = new ArrayList<Course>();
 	
 		
@@ -94,14 +101,9 @@ public class Coordinator
 		for(ICourse i : fetchedCourses)
 			ConvertedList.add((Course)i);
 		
-		/* add special courses */
- 		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
- 		
- 		/* Filter current availabilities to match Engineer Availabilities
- 		 * Only applies if requested program sequence is SOEN */
- 		if(args[0].equals("SOEN"))
- 			ConvertedList = FilterEngAvailabilities.filterAvailabilitiesForEng(ConvertedList);
-		
+		// add special courses
+		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
+
 		/* Finally, Generate a sequence */
 		sequence = Sequencer.generateSequence(taken, ConvertedList);
 		

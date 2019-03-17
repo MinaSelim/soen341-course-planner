@@ -17,6 +17,8 @@ public class Course implements ICourse
     private double creditUnits;
     private ICourse[] prereq;
     private int priority;
+    private ICourse[] corequisites;
+    private String[] stringCorequisites;
 
     private List<SemesterSeasons> seasons;
 
@@ -26,6 +28,7 @@ public class Course implements ICourse
     		String courseTitle,
     		String courseID,
     		String[] prerequisites,
+    		String[] corequisites,
     		String courseSubject,
     		String courseCatalog,
     		double creditUnits,
@@ -35,11 +38,13 @@ public class Course implements ICourse
         this.courseTitle = courseTitle;
         this.courseID = courseID;
         this.StringPrerequisites = prerequisites;
+        this.stringCorequisites = corequisites;
         this.courseSubject = courseSubject;
         this.courseCatalog = courseCatalog;
         this.creditUnits = creditUnits;
         this.academicCareer = academicCareer;
         this.prereq = new ICourse[StringPrerequisites.length];
+        this.corequisites = new ICourse[stringCorequisites.length];
         this.priority = 0;
     }
 
@@ -73,14 +78,15 @@ public class Course implements ICourse
 	public void setPrerequisites(ICourse[] prereq){
         this.prereq = prereq;
     }
+
+    public void setCorequisites(ICourse[] corequisites){
+        this.corequisites = corequisites;
+    }
 	
 	public void incrementPriority(){
 		priority++; 
 	}
 
-    public int getPriority(){ 
-    	return priority; 
-    }
 
     /*
      * Interface method Implementations
@@ -135,5 +141,21 @@ public class Course implements ICourse
 	@Override
 	public double getCreditUnits() {
 		return creditUnits;
-	}
+    }
+    
+
+    @Override
+    public int getPriority(){ 
+    	return priority; 
+    }
+
+    @Override
+    public ICourse[] getCorequisites() {
+        return corequisites;
+    }
+
+    @Override
+    public String[] getCorequisitesAsCourseCodes() {
+        return stringCorequisites;
+    }
 }
