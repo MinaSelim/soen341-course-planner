@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import http.HttpClient;
 import http.jsonParsers.ConcordiaApiParser;
+import optimization.ConcurrentCourseFetcher;
 import skynet.scheduler.common.Course;
 import skynet.scheduler.common.ICourse;
 
@@ -37,20 +38,6 @@ public class CourseService
         this.httpClient = new HttpClient(username, pass);
     }
 
-    @SuppressWarnings("unused")
-	public ICourse getCourse(String courseCode) throws IOException 
-    {
-
-        String url = String.format(COURSE_DESCRIPTION, courseCode);
-        String httpResponse = httpClient.get(url);
-
-        //May need to hit other endpoints for more info.
-        //send http reponse to a parser method
-
-        return null;
-    }
-
-
     public List<ICourse> getCoursesForProgram(String programCode, ArrayList<String> filter) throws IOException {
 
         String url = String.format(COURSE_CATALOG, programCode, "*", "UGRD");
@@ -80,6 +67,17 @@ public class CourseService
         else
             return ConcordiaApiParser.getCourse(httpResponse);
     }
+
+    /**
+     * Retrieve Course information for the specified course codes.
+     * Pass a list of VALID course codes. Method assumes codes have proper structure and format. (ex SOEN228)
+     * @param codes
+     * @return
+     */
+    public List<ICourse> getCourses(List<String> codes){
+        return ConcurrentCourseFetcher.getCourses(codes, this);
+    }
+
 
 
     @SuppressWarnings("unused")

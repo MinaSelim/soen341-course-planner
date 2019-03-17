@@ -1,16 +1,15 @@
 package skynet.test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import services.CourseService;
-import skynet.filter.courseFilter;
 import skynet.scheduler.common.ICourse;
 
 public class CourseServiceTest {
-
 
     private CourseService service;
 
@@ -29,7 +28,9 @@ public class CourseServiceTest {
         boolean match = true;
         String[] expected = getExpectedSOENCourse();
 
-        List<ICourse> courses = service.getCoursesForProgram("SOEN", courseFilter.getFilterForProgram("SOEN"));
+        //List<ICourse> courses = service.getCoursesForProgram("SOEN", courseFilter.getFilterForProgram("SOEN"));
+
+        List<ICourse> courses = service.getCoursesForProgram("SOEN", new ArrayList<>());
 
         //check size if the same
         match = expected.length == courses.size();
@@ -68,4 +69,23 @@ public class CourseServiceTest {
         };
         return courses;
     }
+
+
+    @Test
+    public void testConcurrentFetcher(){
+        List<String> codes = new ArrayList<>();
+
+        codes.add("COMP248");
+        codes.add("COMP249");
+        codes.add("SOEN228");
+        codes.add("SOEN331");
+        codes.add("COMP346");
+        codes.add("COMP352");
+
+        List<ICourse> courses = service.getCourses(codes);
+
+        int i = 0;
+
+    }
+
 }
