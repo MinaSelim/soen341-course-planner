@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import availability.Availability;
+import availability.AvailabilityProvider;
 import http.HttpClient;
 import http.jsonParsers.ConcordiaApiParser;
 import optimization.ConcurrentCourseFetcher;
@@ -73,7 +74,7 @@ public class CourseService
     }
 
     /**
-     * Retrieve Course information for the specified course codes.
+     * Retrieves Course information for the specified course codes.
      * Pass a list of VALID course codes. Method assumes codes have proper structure and format. (ex SOEN228)
      * @param codes
      * @return

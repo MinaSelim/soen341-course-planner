@@ -9,26 +9,25 @@ import java.util.List;
 
 public class AvailabilityProvider {
 
-    private static HashMap<String, Season> lookup = new HashMap<>();
+    private static HashMap<String, Season> lookup;
     private static int currentYear = 2019;
 
     private AvailabilityProvider(){}
 
-    public static Season getSeason(String key){
-        if(lookup != null) {
-            return lookup.get(key);
-        }else
-            return null;
-    }
+    public static HashMap<String, Season> getLookup(CourseService service) {
 
-    public static void setLookup(CourseService service) {
-        try {
-            List<Availability> sessions = service.getAvailablitity(currentYear);
-            setLookup(sessions);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Cannot set sessions");
-        }
+        if(lookup == null) {
+            lookup = new HashMap<>();
+            try {
+                List<Availability> sessions = service.getAvailablitity(currentYear);
+                setLookup(sessions);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Cannot set sessions");
+            }
+            return lookup;
+        }else
+            return lookup;
     }
 
     private static void setLookup(List<Availability> sessions){
