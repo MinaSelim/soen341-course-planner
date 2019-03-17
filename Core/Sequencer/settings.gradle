@@ -1,0 +1,3 @@
+rootProject.name = 'Sequencer'
+include ':Common'
+project(':Common').projectDir = new File(settingsDir,"../../Common")
