@@ -5,8 +5,10 @@ import availability.AvailabilityProvider;
 import org.junit.Before;
 import org.junit.Test;
 import services.CourseService;
+import skynet.scheduler.common.SemesterSeasons;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 public class AvailTest {
@@ -23,7 +25,7 @@ public class AvailTest {
     @Test
     public void testAvail() throws IOException {
 
-        AvailabilityProvider.setLookup(service);
+        HashMap<String, SemesterSeasons> lookup = AvailabilityProvider.getLookup(service);
         int i = 0;
     }
 

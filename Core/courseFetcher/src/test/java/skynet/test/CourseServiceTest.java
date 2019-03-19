@@ -6,8 +6,10 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import services.AttachSeason;
 import services.CourseService;
 import skynet.scheduler.common.ICourse;
+import skynet.scheduler.common.SemesterSeasons;
 
 public class CourseServiceTest {
 
@@ -88,4 +90,14 @@ public class CourseServiceTest {
 
     }
 
+
+    @Test
+    public void testGetSeason() throws IOException {
+
+        List<ICourse> courses = service.getCoursesForProgram("SOEN", new ArrayList<>());
+
+        AttachSeason.attachSeasons(courses, service);
+
+        int i = 0;
+    }
 }

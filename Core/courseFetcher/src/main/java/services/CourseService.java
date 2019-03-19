@@ -12,6 +12,7 @@ import http.jsonParsers.ConcordiaApiParser;
 import optimization.ConcurrentCourseFetcher;
 import skynet.scheduler.common.Course;
 import skynet.scheduler.common.ICourse;
+import skynet.scheduler.common.SemesterSeasons;
 
 /*
     This service class is used to interact with the Concordia API.
@@ -155,11 +156,24 @@ public class CourseService
         years.add(year + "");
         years.add((year + 1)+ "");
         years.add((year + 2)+ "");
+        years.add((year + 3)+ "");
 
         String url = String.format(COURSE_SESSION, "UGRD", "*", "*");
         String httpResponse = httpClient.get(url);
 
         return ConcordiaApiParser.getAvailability(years, httpResponse);
 
+    }
+
+    public List<SemesterSeasons> getSeasonForCourse(Course c) throws IOException {
+        return getSeasonForCourse(c.getCourseSubject(), c.getCourseCatalog());
+    }
+
+
+        public List<SemesterSeasons> getSeasonForCourse(String programCode, String courseCode) throws IOException {
+
+        String url = String.format(COURSE_SCHEDULE, "*", programCode, courseCode);
+        String httpResponse = httpClient.get(url);
+        return ConcordiaApiParser.getSeasons(httpResponse, this);
     }
 }

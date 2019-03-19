@@ -9,12 +9,12 @@ import java.util.List;
 
 public class AvailabilityProvider {
 
-    private static HashMap<String, Season> lookup;
+    private static HashMap<String, SemesterSeasons> lookup;
     private static int currentYear = 2019;
 
     private AvailabilityProvider(){}
 
-    public static HashMap<String, Season> getLookup(CourseService service) {
+    public static HashMap<String, SemesterSeasons> getLookup(CourseService service) {
 
         if(lookup == null) {
             lookup = new HashMap<>();
@@ -34,20 +34,9 @@ public class AvailabilityProvider {
 
         for(Availability a : sessions){
             String termCode = a.getTermCode();
-            int year = getYear(a);
-            SemesterSeasons s = getAvailable(a);
-            Season season = new Season(termCode, s, year);
+            SemesterSeasons season = getAvailable(a);
             lookup.put(termCode, season);
         }
-    }
-
-    private static int getYear(Availability avail){
-        if(avail.getTermDescription().indexOf(currentYear + "") != -1)
-            return currentYear;
-        else if(avail.getTermDescription().indexOf((currentYear + 1)+ "") != -1)
-            return currentYear + 1;
-        else
-            return currentYear + 2;
     }
 
     private static SemesterSeasons getAvailable(Availability avail) {

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import availability.Availability;
+import availability.AvailabilityProvider;
+import services.CourseService;
 import skynet.scheduler.common.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -199,5 +201,27 @@ public class ConcordiaApiParser
         }
         return availabilities;
 
+    }
+
+    public static List<SemesterSeasons> getSeasons(String json, CourseService service){
+
+        HashMap<String, SemesterSeasons> lookup = AvailabilityProvider.getLookup(service);
+
+        JsonElement httpContent = new JsonParser().parse(json);
+        JsonArray elements = httpContent.getAsJsonArray();
+
+        List<SemesterSeasons> seasons = new ArrayList<>();
+
+        for(int i =0; i < elements.size(); i++) {
+            JsonObject obj = elements.get(i).getAsJsonObject();
+            String termCode = obj.get("termCode").getAsString();
+            SemesterSeasons s = lookup.get(termCode);
+
+            if(s != null && !seasons.contains(s)) {
+                seasons.add(lookup.get(termCode));
+            }
+        }
+
+        return seasons;
     }
 }

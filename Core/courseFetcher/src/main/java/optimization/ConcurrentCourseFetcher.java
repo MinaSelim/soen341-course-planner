@@ -1,6 +1,7 @@
 package optimization;
 
 import services.Attach;
+import services.AttachSeason;
 import services.CourseService;
 import skynet.scheduler.common.Course;
 import skynet.scheduler.common.ICourse;
@@ -108,6 +109,7 @@ class AddCourse implements Runnable{
         try {
             ICourse c = service.getCourse(info[0], info[1]);
             attachPreq(c);
+            AttachSeason.attachSeasons(c, service);
             recordInfo(c);
         } catch (IOException e) {
             e.printStackTrace();
