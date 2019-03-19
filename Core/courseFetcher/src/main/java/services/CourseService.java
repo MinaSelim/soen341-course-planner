@@ -56,10 +56,11 @@ public class CourseService
         courses.toArray(courseArray);
         
         Attach attch = new Attach(courseArray, this, filter);
-        
         attch.attachPrerequisites();
+
+        AttachSeason.attachSeasons(courses, this);
         
-        return  courses;
+        return courses;
     }
 
     public ICourse getCourse(String programCode, String classCode) throws IOException 
