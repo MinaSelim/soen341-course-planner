@@ -1,5 +1,7 @@
 package PracticeServer.SampleServer.entity;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Course {
 
     //Base Course Object properties
@@ -52,5 +54,12 @@ public class Course {
     public void setCredits(double credits)
     {
         this.credits = credits;
+    }
+
+    public String toString()
+    {
+        return "Course [courseName=" + this.courseName + ", " +
+                "courseCode=" + this.courseCode + ", " +
+                "credits=" + this.credits + "]";
     }
 }
