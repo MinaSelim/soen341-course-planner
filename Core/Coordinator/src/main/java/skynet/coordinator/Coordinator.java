@@ -53,6 +53,10 @@ public class Coordinator
 		 * specified degree */
 		fetchedCourses = courseFilter.FilterListForProgram(args[0], fetchedCourses, courseFilter.getFilterForProgram(args[0]));
 		
+		/* Next, Attach the available seasons to each course object in the filtered List
+		 */
+		AttachSeason.attachSeasons(fetchedCourses, service);
+		
 		/* This is a debug tool output.
 		 * Outputs every course object in the filteredList as well as its
 		 * prerequisites.

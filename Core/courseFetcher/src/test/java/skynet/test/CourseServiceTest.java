@@ -1,5 +1,7 @@
 package skynet.test;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +75,7 @@ public class CourseServiceTest {
     }
 
 
-    @Test
+    //@Test
     public void testConcurrentFetcher(){
         List<String> codes = new ArrayList<>();
 
@@ -91,13 +93,13 @@ public class CourseServiceTest {
     }
 
 
-    @Test
+    //@Test
     public void testGetSeason() throws IOException {
 
         List<ICourse> courses = service.getCoursesForProgram("SOEN", new ArrayList<>());
 
         AttachSeason.attachSeasons(courses, service);
-
-        int i = 0;
+ 
+        //assertNotNull(courses.get(0).getCourseAvailability());
     }
 }

@@ -172,7 +172,7 @@ public class ConcordiaApiParser
         return index;
     }
 
-    public static List<Availability> getAvailability(List<String> yearsToAdd, String response){
+    public static List<Availability> getAvailability(int yearToAdd, String response){
 
         List<Availability> availabilities = new ArrayList<>();
 
@@ -185,12 +185,14 @@ public class ConcordiaApiParser
             String des = obj.get("termDescription").getAsString();
 
             boolean skip = true;
-
-            for (String s: yearsToAdd)
-                if(des.indexOf(s) != -1) {
+            
+            
+            if(des.indexOf(Integer.toString(yearToAdd)) != -1
+            		|| des.indexOf(Integer.toString(yearToAdd+1)) != -1
+            		|| des.indexOf(Integer.toString(yearToAdd-1)) != -1) 
+            {
                     skip = false;
-                    break;
-                }
+            }
             if(!skip){
                 String termCode = obj.get("termCode").getAsString();
                 String ses = obj.get("sessionCode").getAsString();
@@ -210,9 +212,11 @@ public class ConcordiaApiParser
         JsonElement httpContent = new JsonParser().parse(json);
         JsonArray elements = httpContent.getAsJsonArray();
 
+        
         List<SemesterSeasons> seasons = new ArrayList<>();
 
         for(int i =0; i < elements.size(); i++) {
+        	
             JsonObject obj = elements.get(i).getAsJsonObject();
             String termCode = obj.get("termCode").getAsString();
             SemesterSeasons s = lookup.get(termCode);

@@ -57,8 +57,6 @@ public class CourseService
         
         Attach attch = new Attach(courseArray, this, filter);
         attch.attachPrerequisites();
-
-        AttachSeason.attachSeasons(courses, this);
         
         return courses;
     }
@@ -153,16 +151,10 @@ public class CourseService
 
     public List<Availability> getAvailablitity(int year) throws IOException {
 
-        List<String> years = new ArrayList<>();
-        years.add(year + "");
-        years.add((year + 1)+ "");
-        years.add((year + 2)+ "");
-        years.add((year + 3)+ "");
-
         String url = String.format(COURSE_SESSION, "UGRD", "*", "*");
         String httpResponse = httpClient.get(url);
 
-        return ConcordiaApiParser.getAvailability(years, httpResponse);
+        return ConcordiaApiParser.getAvailability(year, httpResponse);
 
     }
 
@@ -172,7 +164,7 @@ public class CourseService
 
 
         public List<SemesterSeasons> getSeasonForCourse(String programCode, String courseCode) throws IOException {
-
+        	
         String url = String.format(COURSE_SCHEDULE, "*", programCode, courseCode);
         String httpResponse = httpClient.get(url);
         return ConcordiaApiParser.getSeasons(httpResponse, this);
