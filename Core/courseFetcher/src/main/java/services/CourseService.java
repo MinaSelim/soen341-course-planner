@@ -4,16 +4,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import availability.Availability;
 import http.HttpClient;
 import http.jsonParsers.ConcordiaApiParser;
+import optimization.ConcurrentCourseFetcher;
 import skynet.scheduler.common.Course;
 import skynet.scheduler.common.ICourse;
+import skynet.scheduler.common.SemesterSeasons;
 
 /*
     This service class is used to interact with the Concordia API.
  */
 public class CourseService 
 {
+    @SuppressWarnings("unused")
     private static final String COURSE_DESCRIPTION = "https://opendata.concordia.ca/API/v1/course/description/filter/%s";
     /*
      *      1st %s (subject) 	- ex. SOEN
@@ -23,8 +28,9 @@ public class CourseService
     private static final String COURSE_CATALOG = "https://opendata.concordia.ca/API/v1/course/catalog/filter/%s/%s/%s";
     @SuppressWarnings("unused")
 	private static final String COURSE_SECTION = "https://opendata.concordia.ca/API/v1/course/section/filter/{subject}/{catalog}";
-    @SuppressWarnings("unused")
-	private static final String COURSE_SCHEDULE = "https://opendata.concordia.ca/API/v1/course/schedule/filter/{courseid}/{subject}/{catalog}";
+	private static final String COURSE_SCHEDULE = "https://opendata.concordia.ca/API/v1/course/schedule/filter/%s/%s/%s";
+    private static final String COURSE_SESSION = "https://opendata.concordia.ca/API/v1/course/session/filter/%s/%s/%s";
+
     private HttpClient httpClient;
 
     /**
@@ -36,20 +42,6 @@ public class CourseService
     {
         this.httpClient = new HttpClient(username, pass);
     }
-
-    @SuppressWarnings("unused")
-	public ICourse getCourse(String courseCode) throws IOException 
-    {
-
-        String url = String.format(COURSE_DESCRIPTION, courseCode);
-        String httpResponse = httpClient.get(url);
-
-        //May need to hit other endpoints for more info.
-        //send http reponse to a parser method
-
-        return null;
-    }
-
 
     public List<ICourse> getCoursesForProgram(String programCode, ArrayList<String> filter) throws IOException {
 
@@ -63,10 +55,9 @@ public class CourseService
         courses.toArray(courseArray);
         
         Attach attch = new Attach(courseArray, this, filter);
-        
         attch.attachPrerequisites();
         
-        return  courses;
+        return courses;
     }
 
     public ICourse getCourse(String programCode, String classCode) throws IOException 
@@ -79,6 +70,16 @@ public class CourseService
             return null;
         else
             return ConcordiaApiParser.getCourse(httpResponse);
+    }
+
+    /**
+     * Retrieves Course information for the specified course codes.
+     * Pass a list of VALID course codes. Method assumes codes have proper structure and format. (ex SOEN228)
+     * @param codes
+     * @return
+     */
+    public List<ICourse> getCourses(List<String> codes){
+        return ConcurrentCourseFetcher.getCourses(codes, this);
     }
 
 
@@ -145,5 +146,26 @@ public class CourseService
         for(String preCode: pre)
             if(preCode.equals(code));
         return false;
+    }
+
+    public List<Availability> getAvailablitity(int year) throws IOException {
+
+        String url = String.format(COURSE_SESSION, "UGRD", "*", "*");
+        String httpResponse = httpClient.get(url);
+
+        return ConcordiaApiParser.getAvailability(year, httpResponse);
+
+    }
+
+    public List<SemesterSeasons> getSeasonForCourse(Course c) throws IOException {
+        return getSeasonForCourse(c.getCourseSubject(), c.getCourseCatalog());
+    }
+
+
+        public List<SemesterSeasons> getSeasonForCourse(String programCode, String courseCode) throws IOException {
+        	
+        String url = String.format(COURSE_SCHEDULE, "*", programCode, courseCode);
+        String httpResponse = httpClient.get(url);
+        return ConcordiaApiParser.getSeasons(httpResponse, this);
     }
 }

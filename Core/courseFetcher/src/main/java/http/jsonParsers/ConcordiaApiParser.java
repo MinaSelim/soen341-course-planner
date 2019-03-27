@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import availability.Availability;
+import availability.AvailabilityProvider;
+import services.CourseService;
 import skynet.scheduler.common.*;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -167,5 +170,62 @@ public class ConcordiaApiParser
             index = content.indexOf("requisite", start + 1);
 
         return index;
+    }
+
+    public static List<Availability> getAvailability(int yearToAdd, String response){
+
+        List<Availability> availabilities = new ArrayList<>();
+
+        JsonElement httpContent = new JsonParser().parse(response);
+        JsonArray elements = httpContent.getAsJsonArray();
+
+        for(int i = 0; i < elements.size(); i++) {
+            JsonObject obj = elements.get(i).getAsJsonObject();
+
+            String des = obj.get("termDescription").getAsString();
+
+            boolean skip = true;
+            
+            
+            if(des.indexOf(Integer.toString(yearToAdd)) != -1
+            		|| des.indexOf(Integer.toString(yearToAdd+1)) != -1
+            		|| des.indexOf(Integer.toString(yearToAdd-1)) != -1) 
+            {
+                    skip = false;
+            }
+            if(!skip){
+                String termCode = obj.get("termCode").getAsString();
+                String ses = obj.get("sessionCode").getAsString();
+                String sesDes = obj.get("sessionDescription").getAsString();
+
+                availabilities.add(new Availability(termCode, des, ses, sesDes));
+            }
+        }
+        return availabilities;
+
+    }
+
+    public static List<SemesterSeasons> getSeasons(String json, CourseService service){
+
+        HashMap<String, SemesterSeasons> lookup = AvailabilityProvider.getLookup(service);
+
+        JsonElement httpContent = new JsonParser().parse(json);
+        JsonArray elements = httpContent.getAsJsonArray();
+
+        
+        List<SemesterSeasons> seasons = new ArrayList<>();
+
+        for(int i =0; i < elements.size(); i++) {
+        	
+            JsonObject obj = elements.get(i).getAsJsonObject();
+            String termCode = obj.get("termCode").getAsString();
+            SemesterSeasons s = lookup.get(termCode);
+
+            if(s != null && !seasons.contains(s)) {
+                seasons.add(lookup.get(termCode));
+            }
+        }
+
+        return seasons;
     }
 }

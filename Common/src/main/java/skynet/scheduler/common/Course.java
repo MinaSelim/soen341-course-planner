@@ -3,6 +3,8 @@ package skynet.scheduler.common;
 import skynet.scheduler.common.ICourse;
 import skynet.scheduler.common.SemesterSeasons;
 
+import java.util.List;
+
 public class Course implements ICourse 
 {
     private String courseName;
@@ -15,6 +17,8 @@ public class Course implements ICourse
     private double creditUnits;
     private ICourse[] prereq;
     private int priority;
+
+    private List<SemesterSeasons> seasons;
 
     public Course(){}
 
@@ -90,14 +94,22 @@ public class Course implements ICourse
     
     @Override
     public SemesterSeasons[] getCourseAvailability() {
-    	//TO-DO
-        return null;
+
+        SemesterSeasons[] s = new SemesterSeasons[this.seasons.size()];
+        this.seasons.toArray(s);
+        return s;
+    }
+
+    public void setCourseAvailability(List<SemesterSeasons> seasons){
+        this.seasons = seasons;
     }
 
     @Override
     public SemesterSeasons[] getEngineerAvailability() {
-    	//TO-DO
-        return null;
+
+        SemesterSeasons[] s = new SemesterSeasons[this.seasons.size()];
+        this.seasons.toArray(s);
+        return s;
     }
 
     @Override
