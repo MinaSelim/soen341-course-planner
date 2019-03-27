@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import availability.Availability;
-import availability.AvailabilityProvider;
 import http.HttpClient;
 import http.jsonParsers.ConcordiaApiParser;
 import optimization.ConcurrentCourseFetcher;
@@ -19,6 +18,7 @@ import skynet.scheduler.common.SemesterSeasons;
  */
 public class CourseService 
 {
+    @SuppressWarnings("unused")
     private static final String COURSE_DESCRIPTION = "https://opendata.concordia.ca/API/v1/course/description/filter/%s";
     /*
      *      1st %s (subject) 	- ex. SOEN
@@ -28,7 +28,6 @@ public class CourseService
     private static final String COURSE_CATALOG = "https://opendata.concordia.ca/API/v1/course/catalog/filter/%s/%s/%s";
     @SuppressWarnings("unused")
 	private static final String COURSE_SECTION = "https://opendata.concordia.ca/API/v1/course/section/filter/{subject}/{catalog}";
-    @SuppressWarnings("unused")
 	private static final String COURSE_SCHEDULE = "https://opendata.concordia.ca/API/v1/course/schedule/filter/%s/%s/%s";
     private static final String COURSE_SESSION = "https://opendata.concordia.ca/API/v1/course/session/filter/%s/%s/%s";
 

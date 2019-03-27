@@ -1,15 +1,14 @@
 package skynet.test;
 
-import availability.Availability;
-import availability.AvailabilityProvider;
-import org.junit.Before;
-import org.junit.Test;
-import services.CourseService;
-import skynet.scheduler.common.SemesterSeasons;
-
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import availability.AvailabilityProvider;
+import services.CourseService;
+import skynet.scheduler.common.SemesterSeasons;
 
 public class AvailTest {
 
@@ -22,7 +21,8 @@ public class AvailTest {
         this.service = new CourseService(user, pass);
     }
 
-    @Test
+    @SuppressWarnings("unused")
+	@Test
     public void testAvail() throws IOException {
 
         HashMap<String, SemesterSeasons> lookup = AvailabilityProvider.getLookup(service);

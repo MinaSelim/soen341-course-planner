@@ -1,15 +1,14 @@
 package services;
 
-import skynet.scheduler.common.Course;
-import skynet.scheduler.common.ICourse;
-import skynet.scheduler.common.SemesterSeasons;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import skynet.scheduler.common.Course;
+import skynet.scheduler.common.ICourse;
+import skynet.scheduler.common.SemesterSeasons;
 
 public class AttachSeason {
 
