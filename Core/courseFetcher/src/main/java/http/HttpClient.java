@@ -33,10 +33,16 @@ public class HttpClient {
     public String get (String link) throws IOException {
 
         URL url = new URL(link);
-
+        HttpURLConnection connection = null;
         //Setup connection
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        try {
+        connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
+        } catch (IOException e)
+        {
+        	System.out.println("ERRORURL: " + link);
+        	throw e;
+        }
 
         //Set Http Basic Authentication Header
         connection.setRequestProperty  ("Authorization", "Basic " + getAuthenticationHeader());
@@ -59,6 +65,11 @@ public class HttpClient {
         } else {
             System.out.println("Failed to receive HTTP GET response");
         }
+        
+        // This removes problematic lines sometimes sent back by the API
+        httpResponse = httpResponse.replaceAll("\\n", "");
+        httpResponse = httpResponse.replaceAll("\\r", "");
+
 
         return httpResponse;
     }

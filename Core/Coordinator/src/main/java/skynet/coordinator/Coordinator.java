@@ -66,7 +66,7 @@ public class Coordinator
 		
 		/* The next step is to filter out all the courses that are not required for
 		 * specified degree */
-		fetchedCourses = CourseFilter.FilterListForProgram(fetchedCourses, requiredCourses);
+	//	fetchedCourses = CourseFilter.FilterListForProgram(fetchedCourses, requiredCourses);
 		
 		/* Next, Attach the available seasons to each course object in the filtered List
 		 */
@@ -80,7 +80,7 @@ public class Coordinator
 		{
 			System.out.println("Course: "+fetchedCourses.get(i).getCourseCode());
 			for(int j = 0; j < fetchedCourses.get(i).getPrerequisites().length; ++j)
-				System.out.println(fetchedCourses.get(i).getPrerequisitesAsCourseCodes()[j]);
+				System.out.println(fetchedCourses.get(i).getPrerequisites()[j].getCourseCode());
 			System.out.println();
 		}
 		
@@ -89,9 +89,11 @@ public class Coordinator
 		List<Course> taken = new ArrayList<Course>();
 		addCourse("MATH", "202", taken); 
 		addCourse("MATH", "203", taken);
-		addCourse("MATH", "205", taken);
 		addCourse("MATH", "204", taken);
+		addCourse("MATH", "205", taken);
+		addCourse("PHYS", "204", taken);
 		addCourse("PHYS", "205", taken);
+		addCourse("CHEM", "205", taken);
 		
 		/* TEMPORARY FIX: These added course are specifically problematic.
 		 * Without them, the program loops in the sequencer loop forever.
@@ -116,7 +118,7 @@ public class Coordinator
         {
         	System.out.println(" Semester : " + i.getSeason());
         	for(ICourse c : i.getCoursesScheduled())
-        		System.out.println("\t" + c.getCourseCode());
+        		System.out.println("\t" + c.getCourseCode() + " (" + c.getCreditUnits() + ")");
         }
 		return;
 	}
