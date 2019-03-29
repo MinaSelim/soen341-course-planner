@@ -61,6 +61,11 @@ bootRun.dependsOn webpack
 
 dependencies {
 	npmInstall
+   implementation project(':Coordinator')
+   implementation project(':CourseFilter')
+   implementation project(':Common')
+   implementation project(':courseFetcher')
+   implementation project(':Sequencer')
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
