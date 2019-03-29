@@ -18,7 +18,6 @@ SOEN345
 SOEN357
 SOEN390
 SOEN321
-SOEN490
 SOEN385
 COMP232
 COMP348
@@ -29,3 +28,12 @@ COMP352
 COMP346
 COMP335
 ENCS282
+SPECGeneralElective
+SPECBasicScience
+SPECBasicScience
+SPECProgramElective
+SPECProgramElective
+SPECProgramElective
+SPECProgramElective
+SPECCapstone(1)
+SPECCapstone(2)

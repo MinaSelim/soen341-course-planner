@@ -3,10 +3,14 @@ package skynet.coordinator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import skynet.filter.courseFilter;
-import skynet.scheduler.common.*;
-import services.*;
-import skynet.sequencer.*;
+
+import services.AttachSeason;
+import services.CourseService;
+import skynet.filter.CourseFilter;
+import skynet.scheduler.common.Course;
+import skynet.scheduler.common.ICourse;
+import skynet.sequencer.Semester;
+import skynet.sequencer.Sequencer;
 
 public class Coordinator 
 {	
@@ -25,6 +29,7 @@ public class Coordinator
 		 * simply could not figure out a better way to design the code
 		 * without having access to the other modules */
 		fetchedCourses = new ArrayList<ICourse>();
+
 		service = new CourseService("132","6a388ea97bb3d994c699760a7ee01472");
 		
 		/* When the server calls our application, it passes with it an argument 
@@ -33,25 +38,35 @@ public class Coordinator
 		 * Obviously, this is very bare bones for now, later on we can add more arguments
 		 * for information on already completed courses which the user has specified
 		 * on the front end.*/
-		switch(args[0])
+		
+		ArrayList<String> requiredCourses = CourseFilter.getFilterForProgram(args[0]);
+		
+		ArrayList<String> requiredCourseCodesForQuery = getQueryCourseCodes(requiredCourses);
+		
+		ArrayList<CoursesFetcherThread> fetchers = new ArrayList<CoursesFetcherThread>();
+		
+		for(String courseCode : requiredCourseCodesForQuery)
 		{
-		case "SOEN":
-			fetchedCourses = service.getCoursesForProgram("SOEN",courseFilter.getFilterForProgram(args[0]));
-			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("ENGR",courseFilter.getFilterForProgram(args[0])));
-			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("ENCS",courseFilter.getFilterForProgram(args[0])));
-			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("COMP",courseFilter.getFilterForProgram(args[0])));
-			break;
-		case "COMP":
-			fetchedCourses = service.getCoursesForProgram("COMP",courseFilter.getFilterForProgram(args[0]));
-			fetchedCourses.addAll(fetchedCourses.size(), service.getCoursesForProgram("ENCS",courseFilter.getFilterForProgram(args[0])));
-			break;
-		default:
-			return;
+			CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses);
+			fetcher.start();
+			fetchers.add(fetcher);
 		}
+		
+		for(CoursesFetcherThread t1 : fetchers)
+		{
+			try {
+				t1.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
 		
 		/* The next step is to filter out all the courses that are not required for
 		 * specified degree */
-		fetchedCourses = courseFilter.FilterListForProgram(args[0], fetchedCourses, courseFilter.getFilterForProgram(args[0]));
+		fetchedCourses = CourseFilter.FilterListForProgram(fetchedCourses, requiredCourses);
 		
 		/* Next, Attach the available seasons to each course object in the filtered List
 		 */
@@ -89,6 +104,9 @@ public class Coordinator
 		for(ICourse i : fetchedCourses)
 			ConvertedList.add((Course)i);
 		
+		// add special courses
+		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
+		
 		/* Finally, Generate a sequence */
 		sequence = Sequencer.generateSequence(taken, ConvertedList);
 		
@@ -109,5 +127,30 @@ public class Coordinator
 		Course c = new Course(); 
 		c.setCourseCode(program + " " + code);		
 		course.add(c);
+	}
+	
+	private static ArrayList<String> getQueryCourseCodes(List<String> requiredCourses)
+	{
+		ArrayList<String> courseCodes = new ArrayList<String>();
+		for(String courseCode : requiredCourses)
+		{
+			if(!(courseCodes.contains(courseCode.substring(0, 4))) && 
+			   !(courseCode.substring(0,4).equals("SPEC")))
+			{
+				courseCodes.add(courseCode.substring(0, 4));
+			}
+		}
+		
+		return courseCodes;
+	}
+	
+	static synchronized void addToFetchedCourses(List<ICourse> courses)
+	{
+		fetchedCourses.addAll(courses);
+	}
+	
+	static CourseService getCourseService()
+	{
+		return service;
 	}
 }
