@@ -1,7 +1,7 @@
 
 /.metadata/
 /bin/
-
+node_modules/
 .classpath
 .project
 .recommenders
