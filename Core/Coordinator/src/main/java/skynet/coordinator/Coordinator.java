@@ -2,6 +2,7 @@ package skynet.coordinator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import services.AttachSeason;
@@ -101,13 +102,16 @@ public class Coordinator
 		 * Need to find a way to also implement the EWT requirement */
 		addCourse("ENCS", "272", taken);
 		
+		/* Filter our prereqs that are not part of the program*/
+		filterPrereqsOutsideOfProgram(fetchedCourses, requiredCourses);
+		
 		/* Convert List of ICourse to a Compatible List of Course objects */
 		List<Course> ConvertedList = new ArrayList<Course>();
 		for(ICourse i : fetchedCourses)
 			ConvertedList.add((Course)i);
 		
 		// add special courses
-		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
+ 		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
 		
 		/* Finally, Generate a sequence */
 		sequence = Sequencer.generateSequence(taken, ConvertedList);
@@ -145,6 +149,25 @@ public class Coordinator
 		
 		return courseCodes;
 	}
+	
+	private static void filterPrereqsOutsideOfProgram(List<ICourse> fetchedCourses, List<String> filter)
+	{
+		for(ICourse course : fetchedCourses)
+		{
+			List<ICourse> prereqs = Arrays.asList(course.getPrerequisites());
+			try {
+				prereqs = CourseFilter.FilterListForProgram(prereqs, filter);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			ICourse[] filteredPrereqs = new ICourse[prereqs.size()];
+			prereqs.toArray(filteredPrereqs);
+			((Course)course).setPrerequisites(filteredPrereqs);
+			
+		}
+	}
+
 	
 	static synchronized void addToFetchedCourses(List<ICourse> courses)
 	{
