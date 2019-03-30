@@ -51,11 +51,11 @@ public class ConcordiaApiParser
 
 		if(map != null && map.containsKey(id))
 			return null;
-
+		
 		List<String> pre = new ArrayList<String>();
 
-		if(element.get("subject").getAsString().equals("BCEE")
-				&& element.get("catalog").getAsString().equals("451"))
+		if(element.get("subject").getAsString().equals("COEN")
+				&& element.get("catalog").getAsString().equals("346"))
 			System.out.println("");
 
 		if(prereq != null)
@@ -128,6 +128,20 @@ public class ConcordiaApiParser
 		content = content.replaceAll("Youmustcomplete1ofthefollowingcourses", "");
 
 
+		//Special Case When Extra Pre-requisites appear at
+		//end of the API response.
+		int startOfExtraPrereq = 0;
+		if(content.contains("Youmustcomplete1ofthefollowingrulesCoursePrerequisite:"))
+		{
+			startOfExtraPrereq = content.lastIndexOf(":")+1;
+			String extraPrereq = content.substring(startOfExtraPrereq);
+			int count = 1;
+			while(extraPrereq.indexOf(",") != -1)
+			{
+				extraPrereq = extraPrereq.replaceFirst(",", "or"+Integer.toString(count++));
+			}
+			course.add(extraPrereq);
+		}
 
 		//Never Taken
 		int end1 = getEnd(content, start);
