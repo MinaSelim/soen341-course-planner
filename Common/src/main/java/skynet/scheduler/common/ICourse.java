@@ -10,4 +10,6 @@ public interface ICourse
 	public SemesterSeasons[] getCourseAvailability();	// E.g. { Fall, Winter, Summer };
 	public SemesterSeasons[] getEngineerAvailability();	// E.g. { Fall, Winter, Summer };
 	public int getPriority();
+	public ICourse[] getCorequisites();
+	public String[] getCorequisitesAsCourseCodes();
 }

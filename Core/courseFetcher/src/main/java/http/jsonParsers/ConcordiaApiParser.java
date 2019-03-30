@@ -52,22 +52,33 @@ public class ConcordiaApiParser
             return null;
 
         List<String> pre = new ArrayList<String>();
-        
+        List<String> coreqs = new ArrayList<>();
+
         if(element.get("subject").getAsString().equals("ENGR")
         		&& element.get("catalog").getAsString().equals("391"))
         	System.out.println("");
 
-        if(prereq != null)
+        if(prereq != null) {
             pre = getRequirements(prereq.getAsString()).get("prereqs");
+            coreqs = getRequirements(prereq.getAsString()).get("coreqs");
+        }
+        if(pre == null)
+            pre = new ArrayList<String>();
+        if(coreqs == null)
+            coreqs = new ArrayList<>();
 
         String[] preArray = new String[pre.size()];
         pre.toArray(preArray);
+
+        String[] coreqArray = new String[coreqs.size()];
+        coreqs.toArray(coreqArray);
 
         Course course =  new Course(
                 element.get("title").getAsString(),
                 element.get("title").getAsString(),
                 id,
                 preArray,
+                coreqArray,
                 element.get("subject").getAsString(),
                 element.get("catalog").getAsString(),
                 (int)element.get("classUnit").getAsDouble(),
