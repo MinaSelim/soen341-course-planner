@@ -14,7 +14,7 @@ public class AvailabilityProvider {
 
     private AvailabilityProvider(){}
 
-    public static HashMap<String, SemesterSeasons> getLookup(CourseService service) {
+    public static synchronized HashMap<String, SemesterSeasons> getLookup(CourseService service) {
 
         if(lookup == null) {
             lookup = new HashMap<>();
