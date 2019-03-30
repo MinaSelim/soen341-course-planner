@@ -88,19 +88,7 @@ public class Coordinator
 		/* TEMPORARY FIX: A list of Taken courses is passed to the sequencer
 		 * These courses are pre-UnderGrad requirements */
 		List<Course> taken = new ArrayList<Course>();
-		addCourse("MATH", "202", taken); 
-		addCourse("MATH", "203", taken);
-		addCourse("MATH", "204", taken);
-		addCourse("MATH", "205", taken);
-		addCourse("PHYS", "204", taken);
-		addCourse("PHYS", "205", taken);
-		addCourse("CHEM", "205", taken);
-		
-		/* TEMPORARY FIX: These added course are specifically problematic.
-		 * Without them, the program loops in the sequencer loop forever.
-		 * ENCS272 is needed since ENCS 282 requires it.
-		 * Need to find a way to also implement the EWT requirement */
-		addCourse("ENCS", "272", taken);
+	
 		
 		/* Filter our prereqs that are not part of the program*/
 		filterPrereqsOutsideOfProgram(fetchedCourses, requiredCourses);
