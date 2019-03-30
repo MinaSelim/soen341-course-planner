@@ -51,6 +51,7 @@ public class CourseService
         List<ICourse> courses = ConcordiaApiParser.getCourses(httpResponse);
         //attachPrereqs(courses);
 
+        removeCoursesOutsideOfProgram(courses , filter);
         Course[] courseArray = new Course[courses.size()];
         courses.toArray(courseArray);
         
@@ -168,4 +169,23 @@ public class CourseService
         String httpResponse = httpClient.get(url);
         return ConcordiaApiParser.getSeasons(httpResponse, this);
     }
+    
+    private void removeCoursesOutsideOfProgram( List<ICourse> courses ,ArrayList<String> filter)
+    {
+    	int i = 0;
+    	while( i<courses.size())
+    	{
+    		
+    		if(!filter.contains(courses.get(i).getCourseCode()))
+    		{
+    			courses.remove(i);
+    		}
+    		else
+    		{
+    			i++;
+    		}
+    	}
+    }
+        
+        
 }

@@ -28,7 +28,7 @@ public class Course implements ICourse
     		String[] prerequisites,
     		String courseSubject,
     		String courseCatalog,
-    		int creditUnits,
+    		double creditUnits,
     		String academicCareer) 
     {
         this.courseName = courseName;

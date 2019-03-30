@@ -1,7 +1,9 @@
 package skynet.coordinator;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import services.AttachSeason;
@@ -56,17 +58,11 @@ public class Coordinator
 		{
 			try {
 				t1.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+			} catch (InterruptedException e) 
+			{
 				e.printStackTrace();
 			}
 		}
-		
-		
-		
-		/* The next step is to filter out all the courses that are not required for
-		 * specified degree */
-		fetchedCourses = CourseFilter.FilterListForProgram(fetchedCourses, requiredCourses);
 		
 		/* Next, Attach the available seasons to each course object in the filtered List
 		 */
@@ -80,32 +76,24 @@ public class Coordinator
 		{
 			System.out.println("Course: "+fetchedCourses.get(i).getCourseCode());
 			for(int j = 0; j < fetchedCourses.get(i).getPrerequisites().length; ++j)
-				System.out.println(fetchedCourses.get(i).getPrerequisitesAsCourseCodes()[j]);
+				System.out.println(fetchedCourses.get(i).getPrerequisites()[j].getCourseCode());
 			System.out.println();
 		}
 		
-		/* TEMPORARY FIX: A list of Taken courses is passed to the sequencer
-		 * These courses are pre-UnderGrad requirements */
+		/* Declare a list of already taken courses. Empty by Default */
 		List<Course> taken = new ArrayList<Course>();
-		addCourse("MATH", "202", taken); 
-		addCourse("MATH", "203", taken);
-		addCourse("MATH", "205", taken);
-		addCourse("MATH", "204", taken);
-		addCourse("PHYS", "205", taken);
+	
 		
-		/* TEMPORARY FIX: These added course are specifically problematic.
-		 * Without them, the program loops in the sequencer loop forever.
-		 * ENCS272 is needed since ENCS 282 requires it.
-		 * Need to find a way to also implement the EWT requirement */
-		addCourse("ENCS", "272", taken);
+		/* Filter out prerequisites that are not part of the program */
+		filterPrereqsOutsideOfProgram(fetchedCourses, requiredCourses);
 		
 		/* Convert List of ICourse to a Compatible List of Course objects */
 		List<Course> ConvertedList = new ArrayList<Course>();
 		for(ICourse i : fetchedCourses)
 			ConvertedList.add((Course)i);
 		
-		// add special courses
-		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
+		/* add special courses */
+ 		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
 		
 		/* Finally, Generate a sequence */
 		sequence = Sequencer.generateSequence(taken, ConvertedList);
@@ -116,12 +104,13 @@ public class Coordinator
         {
         	System.out.println(" Semester : " + i.getSeason());
         	for(ICourse c : i.getCoursesScheduled())
-        		System.out.println("\t" + c.getCourseCode());
+        		System.out.println("\t" + c.getCourseCode() + " (" + c.getCreditUnits() + ")");
         }
 		return;
 	}
 	
 	/* Temporary debug method */
+	@SuppressWarnings("unused")
 	private static void addCourse(String program, String code, List<Course> course)
 	{
 		Course c = new Course(); 
@@ -144,6 +133,24 @@ public class Coordinator
 		return courseCodes;
 	}
 	
+	private static void filterPrereqsOutsideOfProgram(List<ICourse> fetchedCourses, List<String> filter)
+	{
+		for(ICourse course : fetchedCourses)
+		{
+			List<ICourse> prereqs = Arrays.asList(course.getPrerequisites());
+			try {
+				prereqs = CourseFilter.FilterListForProgram(prereqs, filter);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			ICourse[] filteredPrereqs = new ICourse[prereqs.size()];
+			prereqs.toArray(filteredPrereqs);
+			((Course)course).setPrerequisites(filteredPrereqs);
+			
+		}
+	}
+
 	static synchronized void addToFetchedCourses(List<ICourse> courses)
 	{
 		fetchedCourses.addAll(courses);
@@ -152,5 +159,57 @@ public class Coordinator
 	static CourseService getCourseService()
 	{
 		return service;
+	}
+	
+	/*
+	 * This is simply a copy paste of the main method of the coordinator.
+	 * Can be used by the server to retrieve the sequence directly.
+	 * Otherwise, if the user wants to use the sequencer as an application,
+	 * he can simply run the program from the coordinator directly.
+	 */
+	public static List<Semester> getSequence(String program) throws FileNotFoundException
+	{
+		fetchedCourses = new ArrayList<ICourse>();
+
+		service = new CourseService("132","6a388ea97bb3d994c699760a7ee01472");
+		
+		ArrayList<String> requiredCourses = CourseFilter.getFilterForProgram(program);
+		
+		ArrayList<String> requiredCourseCodesForQuery = getQueryCourseCodes(requiredCourses);
+		
+		ArrayList<CoursesFetcherThread> fetchers = new ArrayList<CoursesFetcherThread>();
+		
+		for(String courseCode : requiredCourseCodesForQuery)
+		{
+			CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses);
+			fetcher.start();
+			fetchers.add(fetcher);
+		}
+		
+		for(CoursesFetcherThread t1 : fetchers)
+		{
+			try {
+				t1.join();
+			} catch (InterruptedException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+
+		AttachSeason.attachSeasons(fetchedCourses, service);
+		
+		List<Course> taken = new ArrayList<Course>();
+
+		filterPrereqsOutsideOfProgram(fetchedCourses, requiredCourses);
+
+		List<Course> ConvertedList = new ArrayList<Course>();
+		for(ICourse i : fetchedCourses)
+			ConvertedList.add((Course)i);
+
+ 		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
+
+		sequence = Sequencer.generateSequence(taken, ConvertedList);
+		
+		return sequence;
 	}
 }

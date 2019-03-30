@@ -19,6 +19,7 @@ public class SpecialCoursesHandler
 		List<String> specialCourses = getSpecialCoursesWithoutCode(programCourses);
 		for(String courseName : specialCourses)
 		{
+			
 			if(courseName.equals("GeneralElective"))
 			{
 				Course course = new Course("General Education Elective", "SPEC", "GeneralElective", new String[0], "General Education Elective", "", 3, null);
@@ -39,7 +40,7 @@ public class SpecialCoursesHandler
 			{
 				Course course = new Course("Program Elective", "SPEC", "ProgramElective", new String[0], "Program Elective", "", 4, null);
 				SemesterSeasons[] availability = {Fall, Winter, Summer};
-				attachProgramElectivesPrereqs(course, courses);
+				attach400LevelPrereqs(course, courses);
 				course.setCourseAvailability(Arrays.asList(availability));
 				courses.add(course);
 			}
@@ -79,7 +80,7 @@ public class SpecialCoursesHandler
 		return specialCourses;
 	}
 
-	private static void attachProgramElectivesPrereqs(Course course, List<Course> courses) 
+	private static void attach400LevelPrereqs(Course course, List<Course> courses) 
 	{
 		ArrayList<ICourse> prereqs = get200LevelCourses(courses);
 		ICourse[] prereqsAsArray = new ICourse[prereqs.size()];

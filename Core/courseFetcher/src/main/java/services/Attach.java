@@ -1,12 +1,12 @@
 package services;
 
-import skynet.scheduler.common.Course;
-import skynet.scheduler.common.ICourse;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import skynet.scheduler.common.Course;
+import skynet.scheduler.common.ICourse;
 
 
 /**
@@ -17,6 +17,7 @@ public class Attach
     private Course[] courses;
     private CourseService service;
     private ArrayList<String> filter;
+    private final int COURSE_CODE_LENGTH = 7;
 
     public Attach(Course[] courses, CourseService service, ArrayList<String> progFilter)
     {
@@ -79,19 +80,26 @@ public class Attach
     {
         if(code.contains("or1"))
         {
-        	if(filter.contains(code.substring(0,code.indexOf("or1"))))
-        		return code.substring(0,code.indexOf("or1"));
-        	else if(filter.contains(code.substring(code.indexOf("or1"),code.indexOf("or2"))))
-        		return code.substring(code.indexOf("or1"),code.indexOf("or2"));
-        	else if(filter.contains(code.substring(code.indexOf("or2"),code.indexOf("or3"))))
-        		return code.substring(code.indexOf("or2"),code.indexOf("or3"));
+        	if(filter.contains(code.substring(0,COURSE_CODE_LENGTH)))
+        		return code.substring(0,COURSE_CODE_LENGTH);
+        	else if(filter.contains(code.substring(code.indexOf("or1") + 3, code.indexOf("or1") + 3 + COURSE_CODE_LENGTH)))
+        		return code.substring(code.indexOf("or1") + 3,code.indexOf("or1") + 3 + COURSE_CODE_LENGTH);
+        	else if(filter.contains(code.substring(code.indexOf("or2") + 3,code.indexOf("or2") + 3 + COURSE_CODE_LENGTH)))
+        		return code.substring(code.indexOf("or2") + 3,code.indexOf("or2") + 3 + COURSE_CODE_LENGTH);
+        	else if(filter.contains(code.substring(code.indexOf("or3") + 3,code.indexOf("or3") + 3 + COURSE_CODE_LENGTH)))
+        		return code.substring(code.indexOf("or3") + 3,code.indexOf("or3") + 3 + COURSE_CODE_LENGTH);
+        	throw new RuntimeException();
+        }
+        else if(code.contains("previouslyorconcurrently"))
+        {
+        		return code.substring(0,code.indexOf("previouslyorconcurrently")); // TOADD Coreqs
         }
         else if(code.contains("or"))
         {
         	if(filter.contains(code.substring(0,code.indexOf("or"))))
         		return code.substring(0,code.indexOf("or"));
         	else
-        		return code.substring(code.indexOf("or")+2,code.length());
+        		return code.substring(code.indexOf("or")+2, (code.indexOf("or")+2+COURSE_CODE_LENGTH));
         }
         return code;
     }
