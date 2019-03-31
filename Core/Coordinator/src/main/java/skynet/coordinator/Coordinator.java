@@ -17,6 +17,7 @@ import skynet.sequencer.Sequencer;
 public class Coordinator 
 {	
 	private static List<ICourse> fetchedCourses;
+	private static List<ICourse> fetchedTaken;
 	private static CourseService service;
 	private static List<Semester> sequence;
 	
@@ -49,7 +50,7 @@ public class Coordinator
 		
 		for(String courseCode : requiredCourseCodesForQuery)
 		{
-			CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses);
+			CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses, false);
 			fetcher.start();
 			fetchers.add(fetcher);
 		}
@@ -156,6 +157,11 @@ public class Coordinator
 		fetchedCourses.addAll(courses);
 	}
 	
+	static synchronized void addToFetchedTaken(List<ICourse> courses)
+	{
+		fetchedTaken.addAll(courses);
+	}
+	
 	static CourseService getCourseService()
 	{
 		return service;
@@ -167,7 +173,7 @@ public class Coordinator
 	 * Otherwise, if the user wants to use the sequencer as an application,
 	 * he can simply run the program from the coordinator directly.
 	 */
-	public static List<Semester> getSequence(String program) throws FileNotFoundException
+	public static List<Semester> getSequence(String program, List<String> takenAsString) throws FileNotFoundException
 	{
 		fetchedCourses = new ArrayList<ICourse>();
 
@@ -181,7 +187,7 @@ public class Coordinator
 		
 		for(String courseCode : requiredCourseCodesForQuery)
 		{
-			CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses);
+			CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses, false);
 			fetcher.start();
 			fetchers.add(fetcher);
 		}
@@ -198,17 +204,40 @@ public class Coordinator
 
 		AttachSeason.attachSeasons(fetchedCourses, service);
 		
-		List<Course> taken = new ArrayList<Course>();
+		if(takenAsString != null)
+		{
+			ArrayList<String> requiredCourseCodeforQueryTaken = getQueryCourseCodes(takenAsString);
+			ArrayList<CoursesFetcherThread> takenFetchers = new ArrayList<CoursesFetcherThread>();
+			for(String courseCode : requiredCourseCodeforQueryTaken)
+			{
+				CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses, true);
+				fetcher.start();
+				takenFetchers.add(fetcher);
+			}
+			for(CoursesFetcherThread t1 : takenFetchers)
+			{
+				try {
+					t1.join();
+				} catch (InterruptedException e) 
+				{
+					e.printStackTrace();
+				}
+			}
+		}
 
 		filterPrereqsOutsideOfProgram(fetchedCourses, requiredCourses);
 
 		List<Course> ConvertedList = new ArrayList<Course>();
 		for(ICourse i : fetchedCourses)
 			ConvertedList.add((Course)i);
+		
+		List<Course> ConvertedListTaken = new ArrayList<Course>();
+		for(ICourse i : fetchedTaken)
+			ConvertedListTaken.add((Course)i);
 
  		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
 
-		sequence = Sequencer.generateSequence(taken, ConvertedList);
+		sequence = Sequencer.generateSequence(ConvertedListTaken, ConvertedList);
 		
 		return sequence;
 	}
