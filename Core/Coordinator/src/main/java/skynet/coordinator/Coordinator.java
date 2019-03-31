@@ -9,6 +9,7 @@ import java.util.List;
 import services.AttachSeason;
 import services.CourseService;
 import skynet.filter.CourseFilter;
+import skynet.filter.FilterEngAvailabilities;
 import skynet.scheduler.common.Course;
 import skynet.scheduler.common.ICourse;
 import skynet.sequencer.Semester;
@@ -17,7 +18,7 @@ import skynet.sequencer.Sequencer;
 public class Coordinator 
 {	
 	private static List<ICourse> fetchedCourses;
-	private static List<ICourse> fetchedTaken;
+	private static List<Course> fetchedTaken;
 	private static CourseService service;
 	private static List<Semester> sequence;
 	
@@ -95,6 +96,11 @@ public class Coordinator
 		
 		/* add special courses */
  		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
+ 		
+ 		/* Filter current availabilities to match Engineer Availabilities
+ 		 * Only applies if requested program sequence is SOEN */
+ 		if(args[0].equals("SOEN"))
+ 			ConvertedList = FilterEngAvailabilities.filterAvailabilitiesForEng(ConvertedList);
 		
 		/* Finally, Generate a sequence */
 		sequence = Sequencer.generateSequence(taken, ConvertedList);
@@ -110,8 +116,6 @@ public class Coordinator
 		return;
 	}
 	
-	/* Temporary debug method */
-	@SuppressWarnings("unused")
 	private static void addCourse(String program, String code, List<Course> course)
 	{
 		Course c = new Course(); 
@@ -159,7 +163,7 @@ public class Coordinator
 	
 	static synchronized void addToFetchedTaken(ICourse course)
 	{
-		fetchedTaken.add(course);
+		fetchedTaken.add((Course)course);
 	}
 	
 	static CourseService getCourseService()
@@ -176,7 +180,7 @@ public class Coordinator
 	public static List<Semester> getSequence(String program, List<String> takenAsString) throws FileNotFoundException
 	{
 		fetchedCourses = new ArrayList<ICourse>();
-		fetchedTaken = new ArrayList<ICourse>();
+		fetchedTaken = new ArrayList<Course>();
 
 		service = new CourseService("132","6a388ea97bb3d994c699760a7ee01472");
 		
@@ -207,21 +211,9 @@ public class Coordinator
 		
 		if(takenAsString.size() != 0)
 		{
-			ArrayList<CoursesFetcherThread> takenFetchers = new ArrayList<CoursesFetcherThread>();
-			for(String courseCode : takenAsString)
+			for(String i : takenAsString)
 			{
-				CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses, true);
-				fetcher.start();
-				takenFetchers.add(fetcher);
-			}
-			for(CoursesFetcherThread t1 : takenFetchers)
-			{
-				try {
-					t1.join();
-				} catch (InterruptedException e) 
-				{
-					e.printStackTrace();
-				}
+				addCourse(i.substring(0,4), i.substring(4), fetchedTaken);
 			}
 		}
 
@@ -230,14 +222,13 @@ public class Coordinator
 		List<Course> ConvertedList = new ArrayList<Course>();
 		for(ICourse i : fetchedCourses)
 			ConvertedList.add((Course)i);
-		
-		List<Course> ConvertedListTaken = new ArrayList<Course>();
-		for(ICourse i : fetchedTaken)
-			ConvertedListTaken.add((Course)i);
 
  		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
+ 		
+ 		if(program.equals("SOEN"))
+ 			ConvertedList = FilterEngAvailabilities.filterAvailabilitiesForEng(ConvertedList);
 
-		sequence = Sequencer.generateSequence(ConvertedListTaken, ConvertedList);
+		sequence = Sequencer.generateSequence(fetchedTaken, ConvertedList);
         System.out.println("Displaying Sequence");
         for (Semester i : sequence)
         {
@@ -245,7 +236,6 @@ public class Coordinator
         	for(ICourse c : i.getCoursesScheduled())
         		System.out.println("\t" + c.getCourseCode() + " (" + c.getCreditUnits() + ")");
         }
-		
 		return sequence;
 	}
 }

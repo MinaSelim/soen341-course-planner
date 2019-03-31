@@ -13,12 +13,13 @@ import skynet.filter.CourseFilter;
 import skynet.scheduler.common.ICourse;
 import skynet.sequencer.Semester;
 
+@SuppressWarnings("unused")
 public class testCoordinator 
 {
 	private static List<String> required;
 	private static List<String> taken;
 	
-	@Test
+	//@Test
 	public void testGetSequenceSOEN() throws FileNotFoundException
 	{
 		/*
@@ -43,7 +44,7 @@ public class testCoordinator
 		assertEquals(required.size(), count);
 	}
 	
-	@Test
+	//@Test
 	public void testGetSequenceSOENwithTaken() throws FileNotFoundException
 	{
 		/*
