@@ -157,9 +157,9 @@ public class Coordinator
 		fetchedCourses.addAll(courses);
 	}
 	
-	static synchronized void addToFetchedTaken(List<ICourse> courses)
+	static synchronized void addToFetchedTaken(ICourse course)
 	{
-		fetchedTaken.addAll(courses);
+		fetchedTaken.add(course);
 	}
 	
 	static CourseService getCourseService()
@@ -176,6 +176,7 @@ public class Coordinator
 	public static List<Semester> getSequence(String program, List<String> takenAsString) throws FileNotFoundException
 	{
 		fetchedCourses = new ArrayList<ICourse>();
+		fetchedTaken = new ArrayList<ICourse>();
 
 		service = new CourseService("132","6a388ea97bb3d994c699760a7ee01472");
 		
@@ -204,11 +205,10 @@ public class Coordinator
 
 		AttachSeason.attachSeasons(fetchedCourses, service);
 		
-		if(takenAsString != null)
+		if(takenAsString.size() != 0)
 		{
-			ArrayList<String> requiredCourseCodeforQueryTaken = getQueryCourseCodes(takenAsString);
 			ArrayList<CoursesFetcherThread> takenFetchers = new ArrayList<CoursesFetcherThread>();
-			for(String courseCode : requiredCourseCodeforQueryTaken)
+			for(String courseCode : takenAsString)
 			{
 				CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses, true);
 				fetcher.start();
@@ -238,6 +238,13 @@ public class Coordinator
  		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
 
 		sequence = Sequencer.generateSequence(ConvertedListTaken, ConvertedList);
+        System.out.println("Displaying Sequence");
+        for (Semester i : sequence)
+        {
+        	System.out.println(" Semester : " + i.getSeason());
+        	for(ICourse c : i.getCoursesScheduled())
+        		System.out.println("\t" + c.getCourseCode() + " (" + c.getCreditUnits() + ")");
+        }
 		
 		return sequence;
 	}

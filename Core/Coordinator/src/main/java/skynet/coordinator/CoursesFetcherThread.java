@@ -23,11 +23,19 @@ public class CoursesFetcherThread extends Thread{
 	public void run() 
 	{
 		try {
-			List<ICourse> courses = Coordinator.getCourseService().getCoursesForProgram(courseCode, filter);
 			if(!this.forTaken)
+			{
+				List<ICourse> courses = Coordinator.getCourseService().getCoursesForProgram(courseCode, filter);
 				Coordinator.addToFetchedCourses(courses);
+			}
 			else
-				Coordinator.addToFetchedTaken(courses);
+			{
+				List<String> taken = new ArrayList<String>();
+				taken.add(courseCode);
+				ICourse takenCourse = Coordinator.getCourseService().getCourse(courseCode.substring(0, 4), courseCode.substring(4));
+				Coordinator.addToFetchedTaken(takenCourse);
+				System.out.println();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
