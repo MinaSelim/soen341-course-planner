@@ -51,7 +51,7 @@ public class Coordinator
 		
 		for(String courseCode : requiredCourseCodesForQuery)
 		{
-			CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses, false);
+			CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses);
 			fetcher.start();
 			fetchers.add(fetcher);
 		}
@@ -192,7 +192,7 @@ public class Coordinator
 		
 		for(String courseCode : requiredCourseCodesForQuery)
 		{
-			CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses, false);
+			CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses);
 			fetcher.start();
 			fetchers.add(fetcher);
 		}
