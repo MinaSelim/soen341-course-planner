@@ -9,6 +9,7 @@ import java.util.List;
 import services.AttachSeason;
 import services.CourseService;
 import skynet.filter.CourseFilter;
+import skynet.filter.FilterEngAvailabilities;
 import skynet.scheduler.common.Course;
 import skynet.scheduler.common.ICourse;
 import skynet.sequencer.Semester;
@@ -17,6 +18,7 @@ import skynet.sequencer.Sequencer;
 public class Coordinator 
 {	
 	private static List<ICourse> fetchedCourses;
+	private static List<Course> fetchedTaken;
 	private static CourseService service;
 	private static List<Semester> sequence;
 	
@@ -94,6 +96,11 @@ public class Coordinator
 		
 		/* add special courses */
  		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
+ 		
+ 		/* Filter current availabilities to match Engineer Availabilities
+ 		 * Only applies if requested program sequence is SOEN */
+ 		if(args[0].equals("SOEN"))
+ 			ConvertedList = FilterEngAvailabilities.filterAvailabilitiesForEng(ConvertedList);
 		
 		/* Finally, Generate a sequence */
 		sequence = Sequencer.generateSequence(taken, ConvertedList);
@@ -109,8 +116,6 @@ public class Coordinator
 		return;
 	}
 	
-	/* Temporary debug method */
-	@SuppressWarnings("unused")
 	private static void addCourse(String program, String code, List<Course> course)
 	{
 		Course c = new Course(); 
@@ -156,6 +161,11 @@ public class Coordinator
 		fetchedCourses.addAll(courses);
 	}
 	
+	static synchronized void addToFetchedTaken(ICourse course)
+	{
+		fetchedTaken.add((Course)course);
+	}
+	
 	static CourseService getCourseService()
 	{
 		return service;
@@ -167,9 +177,10 @@ public class Coordinator
 	 * Otherwise, if the user wants to use the sequencer as an application,
 	 * he can simply run the program from the coordinator directly.
 	 */
-	public static List<Semester> getSequence(String program) throws FileNotFoundException
+	public static List<Semester> getSequence(String program, List<String> takenAsString) throws FileNotFoundException
 	{
 		fetchedCourses = new ArrayList<ICourse>();
+		fetchedTaken = new ArrayList<Course>();
 
 		service = new CourseService("132","6a388ea97bb3d994c699760a7ee01472");
 		
@@ -198,7 +209,13 @@ public class Coordinator
 
 		AttachSeason.attachSeasons(fetchedCourses, service);
 		
-		List<Course> taken = new ArrayList<Course>();
+		if(takenAsString.size() != 0)
+		{
+			for(String i : takenAsString)
+			{
+				addCourse(i.substring(0,4), i.substring(4), fetchedTaken);
+			}
+		}
 
 		filterPrereqsOutsideOfProgram(fetchedCourses, requiredCourses);
 
@@ -207,9 +224,18 @@ public class Coordinator
 			ConvertedList.add((Course)i);
 
  		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
+ 		
+ 		if(program.equals("SOEN"))
+ 			ConvertedList = FilterEngAvailabilities.filterAvailabilitiesForEng(ConvertedList);
 
-		sequence = Sequencer.generateSequence(taken, ConvertedList);
-		
+		sequence = Sequencer.generateSequence(fetchedTaken, ConvertedList);
+        System.out.println("Displaying Sequence");
+        for (Semester i : sequence)
+        {
+        	System.out.println(" Semester : " + i.getSeason());
+        	for(ICourse c : i.getCoursesScheduled())
+        		System.out.println("\t" + c.getCourseCode() + " (" + c.getCreditUnits() + ")");
+        }
 		return sequence;
 	}
 }

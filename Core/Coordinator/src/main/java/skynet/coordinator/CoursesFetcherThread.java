@@ -23,11 +23,9 @@ public class CoursesFetcherThread extends Thread{
 		try {
 			List<ICourse> courses = Coordinator.getCourseService().getCoursesForProgram(courseCode, filter);
 			Coordinator.addToFetchedCourses(courses);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
+		}	
 	}
 
 }

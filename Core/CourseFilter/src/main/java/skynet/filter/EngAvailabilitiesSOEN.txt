@@ -1,0 +1,8 @@
+COMP248 Fall
+COMP249 Winter
+COMP335 Fall
+COMP345 Fall Winter
+COMP346 Winter
+COMP348 Summer Fall
+COMP352 Summer Fall
+SOEN228 Winter
