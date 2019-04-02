@@ -3,8 +3,7 @@ import coursesIcon from './images/courses_icon.png';
 import {Button} from 'reactstrap';
 import PropTypes from 'prop-types';
 
-export class CourseItem extends Component {
-  render() {
+export function CourseItem(props)  {
     const {id} = this.props.course;
     return (
       <div style={boxStyle}>
@@ -13,8 +12,8 @@ export class CourseItem extends Component {
         <Button onClick={this.props.delCourse.bind(this,id)} style={btnStyle} close/>
         </p>
       </div>
-    )
-  }
+    );
+  
 }
 
 //PropTypes
