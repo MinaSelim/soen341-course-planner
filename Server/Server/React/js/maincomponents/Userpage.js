@@ -21,13 +21,13 @@ class userPage extends Component {
   }
 
 //Delete
-delCourse = (id) => {
+ delCourse(id){
   this.setState({courses: [...this.state.courses.filter(course => course.id
   !== id)] });
 }
 
 // Add Course
-addCourse = (title) => {
+addCourse(title){
   const newCourse = {
     id: uuid.v4(),
     title,
@@ -35,7 +35,7 @@ addCourse = (title) => {
   this.setState({courses: [...this.state.courses, newCourse]});
 }
 
-getuser = () =>{
+getuser(){
   if(this.props.state.user != null)
   {
     this.state.useremail= Object.keys(this.props.state.user)[12];
