@@ -1,0 +1,13 @@
+.thick {
+    font-weight: 600;
+    font-family: Garamond, Calibri,sans-serif;
+}
+.normal{
+    font-weight: 400;
+    font-family: Garamond,Calibri, sans-serif;
+}
+.card{
+    border: transparent;
+    border-top: transparent;
+    border-bottom: transparent;
+}
