@@ -15,6 +15,7 @@ import Authenticator from '../firebase/Authenticator';
 import { Redirect, Link } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import './Login.css';
+import Main from '../maincomponents/Userpage.js';
 import { blue500 } from 'material-ui/styles/colors';
 
 const styles = theme => ({
@@ -119,7 +120,7 @@ function SignIn(props) {
     props.changeProgram(program);
     Authenticator.auth().signInWithEmailAndPassword(email, props.state.password).then((user)=>{
     }).then(()=>{
-      history.push('/Main');
+      ReactDOM.render(<Main />, document.getElementById('root')) ;
      })
     }
     });

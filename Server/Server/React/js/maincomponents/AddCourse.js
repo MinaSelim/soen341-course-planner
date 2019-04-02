@@ -43,7 +43,7 @@ handleKeyDown(e) {
     }
   }
 
-    onTextChanged = (e) => {
+    onTextChanged(e){
       const value = e.target.value;
       let suggestions = [];
       if (value.length > 0){
@@ -60,7 +60,7 @@ handleKeyDown(e) {
       }))
   }
 
-  renderSuggestions () {
+  renderSuggestions() {
       const {suggestions, cursor} = this.state;
       if(suggestions.length === 0) {
           return null
@@ -79,13 +79,13 @@ handleKeyDown(e) {
       )
   }
 
-  onSubmit = (e) => {
+  onSubmit(e){
     e.preventDefault();
     this.props.addCourse(this.state.text);
     this.setState({text: ''});
 }
 
-    onChange = (e) => this.setState({[e.target.name]: e.target.value});
+    onChange(e){return this.setState({[e.target.name]: e.target.value});}
 
 
   render() {
