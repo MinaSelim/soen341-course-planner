@@ -34,6 +34,8 @@ repositories {
 }
 
 task npmInstall(type: Exec) {
+    inputs.file("package.json")
+	outputs.dir("$projectDir/node_modules/react")
    	String npmCommand = (Os.isFamily(Os.FAMILY_WINDOWS)) ? 'npm.cmd' : 'npm'
     commandLine npmCommand, 'install'
 }
