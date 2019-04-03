@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 function Courses (props) {
  
-      return this.props.courses.map((course) => (
-          <CourseItem key={course.id} course={course} delCourse={this.props.delCourse} />
+      return props.courses.map((course) => (
+          <CourseItem key={course.id} course={course} delCourse={props.delCourse} />
       ));
   
 }

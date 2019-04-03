@@ -4,12 +4,12 @@ import {Button} from 'reactstrap';
 import PropTypes from 'prop-types';
 
 export function CourseItem(props)  {
-    const {id} = this.props.course;
+    const {id} = props.course;
     return (
       <div style={boxStyle}>
         <p style={fontStyle}>
-        <img src={coursesIcon} alt="CourseLogo" style={imgStyle}/>{this.props.course.title}
-        <Button onClick={this.props.delCourse.bind(this,id)} style={btnStyle} close/>
+        <img src={coursesIcon} alt="CourseLogo" style={imgStyle}/>{props.course.title}
+        <Button onClick={props.delCourse.bind(this,id)} style={btnStyle} close/>
         </p>
       </div>
     );

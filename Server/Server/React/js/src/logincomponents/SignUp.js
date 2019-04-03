@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,9 +14,10 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import blue from '@material-ui/core/colors/blue';
 import Authenticator from '../firebase/Authenticator';
 import {database} from '../firebase/Authenticator';
-import { BrowserRouter, Redirect, Link, withRouter} from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Link} from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import './Login.css';
+import Main from '../maincomponents/Userpage.js';
 
 
 const styles = theme => ({
@@ -140,7 +142,12 @@ function SignUp(props) {
           });
       }
     }).then(()=>{
-     history.push('/SignIn');
+      const element = (
+        <Router>
+        <Main program={this.props.state.program}/>
+        </Router>
+      );
+      ReactDOM.render(element, document.getElementById('root'));
     })
   }
 }
