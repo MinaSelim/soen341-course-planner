@@ -22,48 +22,66 @@ public class SpecialCoursesHandler
 			
 			if(courseName.equals("GeneralElective"))
 			{
-				Course course = new Course("General Education Elective", "SPEC", "GeneralElective", new String[0],new String[0], "General Education Elective", "", 3, null);
-				SemesterSeasons[] availability = {Fall, Winter, Summer};
+				Course course = new Course("General Education Elective", "SPEC", "GeneralElective", new String[0], new String[0], "General Education Elective", "", 3, null);
+				SemesterSeasons[] availability = {Fall, Winter};
 				course.setCourseAvailability(Arrays.asList(availability));
 				courses.add(course);
 			}
 			
 			if(courseName.equals("BasicScience"))
 			{
-				Course course = new Course("Basic Science", "SPEC", "GeneralElective", new String[0],new String[0], "Basic Science", "", 3, null);
-				SemesterSeasons[] availability = {Fall, Winter, Summer};
+				Course course = new Course("Basic Science", "SPEC", "GeneralElective", new String[0],  new String[0], "Basic Science", "", 3, null);
+				SemesterSeasons[] availability = {Fall, Winter};
 				course.setCourseAvailability(Arrays.asList(availability));
 				courses.add(course);
 			}
 			
 			if(courseName.equals("ProgramElective"))
 			{
-				Course course = new Course("Program Elective", "SPEC", "ProgramElective", new String[0],new String[0], "Program Elective", "", 4, null);
-				SemesterSeasons[] availability = {Fall, Winter, Summer};
-				attach400LevelPrereqs(course, courses);
+				Course course = new Course("Program Elective", "SPEC", "ProgramElective", new String[0], new String[0], "Program Elective", "", 4, null);
+				SemesterSeasons[] availability = {Fall, Winter};
+			//	attach400LevelPrereqs(course, courses);
 				course.setCourseAvailability(Arrays.asList(availability));
 				courses.add(course);
 			}
 			
 			if(courseName.equals("Capstone(1)"))
 			{
-				Course course = new Course("Capstone(1)", "SPEC", "Capstone(1)", new String[0], new String[0],"Capstone(1)", "", 4, null);
+				Course course = new Course("Capstone(1)", "SPEC", "Capstone(1)", new String[0], new String[0], "Capstone(1)", "", 4, null);
 				SemesterSeasons[] availability = {Fall};
 				course.setCourseAvailability(Arrays.asList(availability));
-				attachCapstonePrereqs(course, courses);
+			//	attachCapstonePrereqs(course, courses);
 				courses.add(course);
 			}
 			
 			if(courseName.equals("Capstone(2)"))
 			{
-				Course course = new Course("Capstone(2)", "SPEC", "Capstone(2)", new String[0], new String[0],"Capstone(2)", "", 4, null);
+				Course course = new Course("Capstone(2)", "SPEC", "Capstone(2)", new String[0], new String[0], "Capstone(2)", "", 4, null);
 				SemesterSeasons[] availability = {Winter};
 				course.setCourseAvailability(Arrays.asList(availability));
-				attachCapstonePrereqs(course, courses);
+			//	attachCapstonePrereqs(course, courses);
 				courses.add(course);
 			}
 		}
 		
+		postProcessCourses(courses);
+		
+	}
+	
+	private static void postProcessCourses(List<Course> courses)
+	{
+		for(Course c : courses)
+		{
+			if(c.getCourseName().contains("Program Elective"))
+			{
+				attach400LevelPrereqs(c, courses);
+			}
+			
+			if(c.getCourseName().contains("Capstone"))
+			{
+				attachCapstonePrereqs(c, courses);
+			}
+		}
 	}
 	
 	private static List<String> getSpecialCoursesWithoutCode( List<String> programCourses)
@@ -116,7 +134,7 @@ public class SpecialCoursesHandler
 		ArrayList<ICourse> prereqs = new ArrayList<ICourse>();
 		for(Course x : courses)
 		{
-			if(x.getCourseCode().charAt(4) == '2')
+			if(x.getCourseCode().charAt(4) == '2' || x.getCourseName().contains("Basic") || x.getCourseName().contains("General"))
 			{
 				prereqs.add(x);
 			}

@@ -72,10 +72,6 @@ public class Coordinator
 		 * specified degree */
 		fetchedCourses = CourseFilter.FilterListForProgram(fetchedCourses, requiredCourses);
 		
-		/* Next, Attach the available seasons to each course object in the filtered List
-		 */
-		AttachSeason.attachSeasons(fetchedCourses, service);
-		
 		/* This is a debug tool output.
 		 * Outputs every course object in the filteredList as well as its
 		 * prerequisites.
@@ -96,10 +92,22 @@ public class Coordinator
 		/* Filter out prerequisites that are not part of the program */
 		filterPrereqsOutsideOfProgram(fetchedCourses, requiredCourses);
 		
+		/* Filter out prerequisites that are not part of the program */
+		filterCoreqsOutsideOfProgram(fetchedCourses, requiredCourses);
+		
+		/* Next, Attach the available seasons to each course object in the filtered List
+		 */
+		AttachSeason.attachSeasons(fetchedCourses, service);
+		
 		/* Convert List of ICourse to a Compatible List of Course objects */
 		List<Course> ConvertedList = new ArrayList<Course>();
 		for(ICourse i : fetchedCourses)
 			ConvertedList.add((Course)i);
+		
+ 		/* Filter current availabilities to match Engineer Availabilities
+ 		 * Only applies if requested program sequence is SOEN */
+ 		if(args[0].equals("SOEN"))
+ 			ConvertedList = FilterEngAvailabilities.filterAvailabilitiesForEng(ConvertedList);
 		
 		// add special courses
 		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
@@ -157,6 +165,24 @@ public class Coordinator
 			
 		}
 	}
+	
+	private static void filterCoreqsOutsideOfProgram(List<ICourse> fetchedCourses, List<String> filter)
+	{
+		for(ICourse course : fetchedCourses)
+		{
+			List<ICourse> coreqs = Arrays.asList(course.getCorequisites());
+			try {
+				coreqs = CourseFilter.FilterListForProgram(coreqs, filter);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			ICourse[] filteredCoreqs = new ICourse[coreqs.size()];
+			coreqs.toArray(filteredCoreqs);
+			((Course)course).setCorequisites(filteredCoreqs);
+			
+		}
+	}
 
 	static synchronized void addToFetchedCourses(List<ICourse> courses)
 	{
@@ -208,8 +234,6 @@ public class Coordinator
 				e.printStackTrace();
 			}
 		}
-
-		AttachSeason.attachSeasons(fetchedCourses, service);
 		
 		if(takenAsString.size() != 0)
 		{
@@ -220,7 +244,11 @@ public class Coordinator
 		}
 
 		filterPrereqsOutsideOfProgram(fetchedCourses, requiredCourses);
+		
+		filterCoreqsOutsideOfProgram(fetchedCourses, requiredCourses);
 
+		AttachSeason.attachSeasons(fetchedCourses, service);
+		
 		List<Course> ConvertedList = new ArrayList<Course>();
 		for(ICourse i : fetchedCourses)
 			ConvertedList.add((Course)i);

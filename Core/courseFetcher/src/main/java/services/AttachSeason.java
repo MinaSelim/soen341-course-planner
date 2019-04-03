@@ -14,6 +14,7 @@ public class AttachSeason {
 
     private static ExecutorService executorService;
     private static int NUM_THREADS = 20;
+    private static volatile boolean COREQS_DONE = false;
 
     public static void attachSeasons(ICourse courses, CourseService service){
         List<ICourse> c = new ArrayList<>();
@@ -27,8 +28,20 @@ public class AttachSeason {
 
         for(ICourse c: courses)
             executorService.submit(new AttachSeasonToCourse((Course)c, service));
-
+        
         waitUntilComplete();
+        
+        if(!COREQS_DONE)
+        {
+        	COREQS_DONE = true;
+        	ArrayList<ICourse> coreqs = new ArrayList<ICourse>();
+        	for(ICourse c: courses)
+        		if(c.getCorequisites() != null)
+        			for(ICourse co : c.getCorequisites())
+        				coreqs.add(co);
+        	
+        	attachSeasons(coreqs, service);
+        }
     }
 
     private static void waitUntilComplete(){

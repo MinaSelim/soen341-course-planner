@@ -3,6 +3,6 @@ COMP249 Winter
 COMP335 Fall
 COMP345 Fall Winter
 COMP346 Winter
-COMP348 Summer Fall
-COMP352 Summer Fall
+COMP348 Fall
+COMP352 Fall
 SOEN228 Winter

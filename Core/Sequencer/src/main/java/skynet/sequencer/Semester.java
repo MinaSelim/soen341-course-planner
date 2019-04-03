@@ -19,29 +19,32 @@ public class Semester implements ISemester
         courses = null;
     }
     
-    public Semester(String s, int y, List<Course> c) 
+    
+    // *** Modified to accept SemesterSeasons *** // 
+    public Semester(SemesterSeasons s, int y, List<Course> c) 
     {
-        season = s;
-        switch(season)
-        {
-        case "Fall":
-        	seasonEnum = SemesterSeasons.Fall;
-        	break;
-        case "Winter":
-        	seasonEnum = SemesterSeasons.Winter;
-        	break;
-        case "Summer":
-        	seasonEnum = SemesterSeasons.Summer;
-        	break;
-        default:
-        	seasonEnum = SemesterSeasons.Fall;
-        	break;
-        }
+//        season = s;
+//        switch(season)
+//        {
+//        case "Fall":
+//        	seasonEnum = SemesterSeasons.Fall;
+//        	break;
+//        case "Winter":
+//        	seasonEnum = SemesterSeasons.Winter;
+//        	break;
+//        case "Summer":
+//        	seasonEnum = SemesterSeasons.Summer;
+//        	break;
+//        default:
+//        	seasonEnum = SemesterSeasons.Fall;
+//        	break;
+//        }
+    	seasonEnum = s;
         year = y;
         courses = c; 
     }
     
-    public String getSeason() { return season; }
+    public SemesterSeasons getSeason() { return seasonEnum; }
     public List<Course> getCourses() { return courses; } 
     public void setSeason(String s) { season = s; }
     public void setYear(int y) { year = y; }

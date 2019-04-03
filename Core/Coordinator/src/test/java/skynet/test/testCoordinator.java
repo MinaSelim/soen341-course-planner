@@ -64,7 +64,7 @@ public class testCoordinator
 		taken.add("ENGR233");
 		taken.add("SOEN287");
 		
-		List<Semester> generatedSequence = Coordinator.getSequence("SOEN", taken);
+		List<Semester> generatedSequence = Coordinator.getSequence("COEN", taken);
 		
 		int count = 0;
 		

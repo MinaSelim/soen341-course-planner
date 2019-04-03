@@ -12,4 +12,6 @@ public interface ICourse
 	public int getPriority();
 	public ICourse[] getCorequisites();
 	public String[] getCorequisitesAsCourseCodes();
+	public boolean hasPrereqs(); 						// Returns true if a course has prerequisites
+	public boolean hasCoreqs(); 
 }

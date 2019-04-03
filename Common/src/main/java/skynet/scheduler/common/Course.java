@@ -86,6 +86,11 @@ public class Course implements ICourse
 	public void incrementPriority(){
 		priority++; 
 	}
+	
+	public void setPriority(int priority)
+	{
+		this.priority = priority;
+	}
 
 
     /*
@@ -158,4 +163,14 @@ public class Course implements ICourse
     public String[] getCorequisitesAsCourseCodes() {
         return stringCorequisites;
     }
+
+	@Override
+	public boolean hasPrereqs() {
+		return prereq.length > 0;
+	}
+
+	@Override
+	public boolean hasCoreqs() {
+		return corequisites.length > 0;
+	}
 }
