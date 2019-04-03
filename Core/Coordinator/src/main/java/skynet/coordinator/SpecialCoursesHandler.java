@@ -22,7 +22,7 @@ public class SpecialCoursesHandler
 			
 			if(courseName.equals("GeneralElective"))
 			{
-				Course course = new Course("General Education Elective", "SPEC", "GeneralElective", new String[0], "General Education Elective", "", 3, null);
+				Course course = new Course("General Education Elective", "SPEC", "GeneralElective", new String[0],new String[0], "General Education Elective", "", 3, null);
 				SemesterSeasons[] availability = {Fall, Winter, Summer};
 				course.setCourseAvailability(Arrays.asList(availability));
 				courses.add(course);
@@ -30,7 +30,7 @@ public class SpecialCoursesHandler
 			
 			if(courseName.equals("BasicScience"))
 			{
-				Course course = new Course("Basic Science", "SPEC", "GeneralElective", new String[0], "Basic Science", "", 3, null);
+				Course course = new Course("Basic Science", "SPEC", "GeneralElective", new String[0],new String[0], "Basic Science", "", 3, null);
 				SemesterSeasons[] availability = {Fall, Winter, Summer};
 				course.setCourseAvailability(Arrays.asList(availability));
 				courses.add(course);
@@ -38,7 +38,7 @@ public class SpecialCoursesHandler
 			
 			if(courseName.equals("ProgramElective"))
 			{
-				Course course = new Course("Program Elective", "SPEC", "ProgramElective", new String[0], "Program Elective", "", 4, null);
+				Course course = new Course("Program Elective", "SPEC", "ProgramElective", new String[0],new String[0], "Program Elective", "", 4, null);
 				SemesterSeasons[] availability = {Fall, Winter, Summer};
 				attach400LevelPrereqs(course, courses);
 				course.setCourseAvailability(Arrays.asList(availability));
@@ -47,7 +47,7 @@ public class SpecialCoursesHandler
 			
 			if(courseName.equals("Capstone(1)"))
 			{
-				Course course = new Course("Capstone(1)", "SPEC", "Capstone(1)", new String[0], "Capstone(1)", "", 4, null);
+				Course course = new Course("Capstone(1)", "SPEC", "Capstone(1)", new String[0], new String[0],"Capstone(1)", "", 4, null);
 				SemesterSeasons[] availability = {Fall};
 				course.setCourseAvailability(Arrays.asList(availability));
 				attachCapstonePrereqs(course, courses);
@@ -56,7 +56,7 @@ public class SpecialCoursesHandler
 			
 			if(courseName.equals("Capstone(2)"))
 			{
-				Course course = new Course("Capstone(2)", "SPEC", "Capstone(2)", new String[0], "Capstone(2)", "", 4, null);
+				Course course = new Course("Capstone(2)", "SPEC", "Capstone(2)", new String[0], new String[0],"Capstone(2)", "", 4, null);
 				SemesterSeasons[] availability = {Winter};
 				course.setCourseAvailability(Arrays.asList(availability));
 				attachCapstonePrereqs(course, courses);
