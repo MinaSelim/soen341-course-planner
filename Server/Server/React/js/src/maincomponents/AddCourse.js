@@ -7,23 +7,29 @@ export class AddCourse extends Component {
   
   constructor (props) {
     super(props)
-    this.handleKeyDown = this.handleKeyDown.bind(this)
-    this.getCourseIDs = this.getCourseIDs.bind(this)
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.getCourseIDs = this.getCourseIDs.bind(this);
+    this.onTextChanged = this.onTextChanged.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
     this.courseIDs = []
     this.state = {
         cursor: 0,
         suggestions: [],
         text: '',
         count: 0,
+        program: sessionStorage.getItem("program")
     }
 }
 
 getCourseIDs() {
-    var updateDb = Authenticator.database().ref("programs").child(this.props.state.program);
+    console.log(this.state.program);
+    var updateDb = Authenticator.database().ref("programs").child("SOEN");
+    console.log(updateDb);
     updateDb.once("value").then((snapshot) =>{
       for(let i=0; i<Object.keys(snapshot.val()).length; i++)
       {
         this.courseIDs.push(Object.keys(snapshot.val())[i]);
+        console.log(this.courseIDs[i]);
       }
     });
 }

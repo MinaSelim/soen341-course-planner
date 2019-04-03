@@ -12,12 +12,36 @@ class userPage extends Component {
 
   constructor(props){
     super(props);
-    this.state ={
-      program: this.props.state.program,
+    this.state = {
+      program: '',
+      lname: '',
+      fname: '',
       courses: [],
-    };
+    }
     this.addCourse = this.addCourse.bind(this);
     this.getuser = this.getuser.bind(this);
+    this.delCourse = this.delCourse.bind(this);
+  }
+
+  componentWillMount(){ 
+    var state ={
+      program: sessionStorage.getItem("program"),
+      lname: sessionStorage.getItem("lname"),
+      fname: sessionStorage.getItem("fname"),
+      courses: [],
+    };
+
+    this.setState(() => ({
+      program: sessionStorage.getItem("program"),
+      lname: sessionStorage.getItem("lname"),
+      fname: sessionStorage.getItem("fname"),
+      courses: [],
+    }));
+  
+  }
+
+  componentDidMount(){
+   
   }
 
 //Delete
@@ -45,18 +69,19 @@ getuser(){
 }
 
   render() {
+    console.log(this.state);
     return (
       <div className="App">
         <CardGroup>
           <div>
             <Card style={profileStyle}>
               <CardImg src={studentIcon} alt="StudentLogo" style={profileImgStyle} />
-              <p className='thick'>{this.props.state.lname}, {this.props.state.fname}</p>
-              <p className='normal'>{this.props.state.email}</p>
+              <p className='thick'>{this.state.lname}, {this.state.fname}</p>
+              <p className='normal'>{this.state.email}</p>
             </Card>
             <div className='card'>
             <p className='thick'>Degree </p>
-            <p className='normal'>{this.props.state.program} <br />Bachelor's Degree</p>
+            <p className='normal'>{this.state.program} <br />Bachelor's Degree</p>
             </div>
             <Card style={{height: '72%'}}>
             <Link to={'/SignIn'}>

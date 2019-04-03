@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component }from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,6 +18,9 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import './Login.css';
 import Main from '../maincomponents/Userpage.js';
 import { blue500 } from 'material-ui/styles/colors';
+import { BrowserRouter as Router, Route, Switch} from "react-router-dom";
+
+
 
 const styles = theme => ({
   main: {
@@ -51,9 +55,56 @@ const styles = theme => ({
   
 });
 
-function SignIn(props) {
-  const { classes } = props;
+class SignIn extends Component{
+  constructor(props){
+    super(props);
+    console.log(this);
+    this.login = this.login.bind(this);
+    this.render = this.render.bind(this);
+  }
+
+  login(e) {
+    e.preventDefault();
+    const props = this.props;
+    
+    var idnumber=this.props.state.idnumber;
+    console.log(this.props);
+    Authenticator.database().ref('users').orderByChild('idnumber').equalTo(idnumber).on("value", (snapshot) => {
+      if(snapshot.val() != null)
+    {
+    var key = Object.keys(snapshot.val())[0];
+    var email = snapshot.val()[key].email;
+    var fname = snapshot.val()[key].fname;
+    var lname = snapshot.val()[key].lname;
+    var program = snapshot.val()[key].program;
+    
+    this.props.changeEmail(email);
+  
+    this.props.changeFname(fname);
+    this.props.changeLname(lname);
+    this.props.changeProgram(program);
+  
+    Authenticator.auth().signInWithEmailAndPassword(email, props.state.password).then((user)=>{
+    }).then(()=>{
+      console.log("State of the parent component")
+      console.log(this.props.state);
+     
+      const element = (
+        <Router>
+        <Main program={this.props.state.program}/>
+        </Router>
+      );
+      ReactDOM.render(element, document.getElementById('root'));
+      
+     })
+    }
+    });
+  }
+
+  render(){
+  const { classes } = this.props;
   const history = createBrowserHistory({forceRefresh:true});
+  
   return (
     <main className={classes.main}>
       <CssBaseline />
@@ -82,11 +133,11 @@ function SignIn(props) {
         <form className={classes.form}>
           <FormControl margin="normal" required fullWidth>
             <InputLabel htmlFor="StudentId">Student ID</InputLabel>
-            <Input id="idnumber" name="idnumber" autoFocus autoComplete="idnumber" value={props.state.idnumber} onChange={props.handleChange.bind(this)}/>
+            <Input id="idnumber" name="idnumber" autoFocus autoComplete="idnumber" value={this.props.state.idnumber} onChange={this.props.handleChange.bind(this)}/>
           </FormControl>
           <FormControl margin="normal" required fullWidth>
             <InputLabel htmlFor="password">Password</InputLabel>
-            <Input name="password" type="password" id="password" autoComplete="current-password" value={props.state.password} onChange={props.handleChange.bind(this)}/>
+            <Input name="password" type="password" id="password" autoComplete="current-password" value={this.props.state.password} onChange={this.props.handleChange.bind(this)}/>
           </FormControl>
           <Button
             type="submit"
@@ -94,37 +145,16 @@ function SignIn(props) {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={login}
+            onClick={this.login}
           >
             Sign In
           </Button>
         </form>
       </Paper>
     </main>
-  );
+  );}
   
-  function login(e) {
-    e.preventDefault();
-    var idnumber=props.state.idnumber;
-    Authenticator.database().ref('users').orderByChild('idnumber').equalTo(idnumber).on("value", function(snapshot) {
-    if(snapshot.val() != null)
-    {
-    var key = Object.keys(snapshot.val())[0];
-    var email = snapshot.val()[key].email;
-    var fname = snapshot.val()[key].fname;
-    var lname = snapshot.val()[key].lname;
-    var program = snapshot.val()[key].program;
-    props.changeEmail(email);
-    props.changeFname(fname);
-    props.changeLname(lname);
-    props.changeProgram(program);
-    Authenticator.auth().signInWithEmailAndPassword(email, props.state.password).then((user)=>{
-    }).then(()=>{
-      ReactDOM.render(<Main />, document.getElementById('root')) ;
-     })
-    }
-    });
-  }
+  
 }
 
 SignIn.propTypes = {
