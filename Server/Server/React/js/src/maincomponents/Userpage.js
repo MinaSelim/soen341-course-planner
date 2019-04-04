@@ -7,6 +7,9 @@ import studentIcon from './images/student_icon.png';
 import uuid from 'uuid';
 import { Link } from 'react-router-dom';
 import './userpage.css';
+import SignIn from '../logincomponents/SignIn.js';
+import { BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import ReactDOM from 'react-dom';
 
 class userPage extends Component {
 
@@ -21,6 +24,8 @@ class userPage extends Component {
     this.addCourse = this.addCourse.bind(this);
     this.getuser = this.getuser.bind(this);
     this.delCourse = this.delCourse.bind(this);
+    this.formatString = this.formatString.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   componentWillMount(){ 
@@ -40,9 +45,6 @@ class userPage extends Component {
   
   }
 
-  componentDidMount(){
-   
-  }
 
 //Delete
  delCourse(id){
@@ -68,24 +70,45 @@ getuser(){
   }
 }
 
+
+formatString(programString){
+  var programString = this.state.program;
+  programString = programString.slice(1, programString.length-1);
+  return programString;
+}
+
+ handleLogout(e){
+  e.preventDefault();
+  const element = (
+    <Router>
+      <SignIn />
+    </Router>
+  );
+  
+  ReactDOM.render(element, document.getElementById('root'));
+ }
+
   render() {
-    console.log(this.state);
+   
+    var programString = this.formatString(this.state.program);
+    var fName = this.formatString(this.state.fname);
+    var lName = this.formatString(this.state.lname);
     return (
       <div className="App">
         <CardGroup>
           <div>
             <Card style={profileStyle}>
               <CardImg src={studentIcon} alt="StudentLogo" style={profileImgStyle} />
-              <p className='thick'>{this.state.lname}, {this.state.fname}</p>
+              <p className='thick'>{lName}, {fName}</p>
               <p className='normal'>{this.state.email}</p>
             </Card>
             <div className='card'>
             <p className='thick'>Degree </p>
-            <p className='normal'>{this.state.program} <br />Bachelor's Degree</p>
+            <p className='normal'>{programString} <br />Bachelor's Degree</p>
             </div>
             <Card style={{height: '72%'}}>
-            <Link to={'/SignIn'}>
-            <Button style={LogoutStyle}>Logout</Button>
+            <Link >
+            <Button onClick={this.heandleLogout} style={LogoutStyle}>Logout</Button>
             </Link>
             </Card>
      </div>

@@ -79,16 +79,13 @@ class SignIn extends Component{
     var program = snapshot.val()[key].program;
     
     this.props.changeEmail(email);
-  
     this.props.changeFname(fname);
     this.props.changeLname(lname);
     this.props.changeProgram(program);
   
     Authenticator.auth().signInWithEmailAndPassword(email, props.state.password).then((user)=>{
     }).then(()=>{
-      console.log("State of the parent component")
-      console.log(this.props.state);
-     
+      
       const element = (
         <Router>
         <Main program={this.props.state.program}/>
@@ -108,23 +105,24 @@ class SignIn extends Component{
   return (
     <main className={classes.main}>
       <CssBaseline />
-      <Button
+       <Button
             type="submit"
             variant="contained"
             color= 'primary'
             className={classes.controller}
       >
             Login
-          </Button>
+        </Button>
+
           <Link to={'/SignUp'}>
-          <Button
-            type="submit"
-            variant="contained"
-            color= 'primary'
-            className={classes.controller}
-          >
-            Register
-          </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                color= 'primary'
+                className={classes.controller}
+              >
+                Register
+              </Button>
           </Link>
       <Paper className={classes.paper}>
         <Typography component="h1" variant="h5">

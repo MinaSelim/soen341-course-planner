@@ -18,6 +18,7 @@ import { BrowserRouter as Router, Redirect, Link} from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import './Login.css';
 import Main from '../maincomponents/Userpage.js';
+import SignIn from './SignIn';
 
 
 const styles = theme => ({
@@ -105,6 +106,7 @@ function SignUp(props) {
             <InputLabel htmlFor="password">Password</InputLabel>
             <Input name="password" type="password" id="password" autoComplete="current-password" value={props.state.password} onChange={props.handleChange.bind(this)}/>
           </FormControl>
+         <Link to={'/SignIn'}>
           <Button
             type="submit"
             fullWidth
@@ -115,6 +117,7 @@ function SignUp(props) {
           >
             Sign up
           </Button>
+         </Link> 
         </form>
       </Paper>
     </main>
@@ -144,7 +147,7 @@ function SignUp(props) {
     }).then(()=>{
       const element = (
         <Router>
-        <Main program={this.props.state.program}/>
+           <SignIn />
         </Router>
       );
       ReactDOM.render(element, document.getElementById('root'));

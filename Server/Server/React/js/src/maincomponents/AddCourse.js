@@ -11,6 +11,8 @@ export class AddCourse extends Component {
     this.getCourseIDs = this.getCourseIDs.bind(this);
     this.onTextChanged = this.onTextChanged.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.formatProgramString = this.formatProgramString.bind(this);
+    this.verifySubmittedCourseTaken = this.verifySubmittedCourseTaken.bind(this);
     this.courseIDs = []
     this.state = {
         cursor: 0,
@@ -23,7 +25,10 @@ export class AddCourse extends Component {
 
 getCourseIDs() {
     console.log(this.state.program);
-    var updateDb = Authenticator.database().ref("programs").child("SOEN");
+    var programString = this.state.program;
+    programString = this.formatProgramString(programString);
+    console.log(programString);
+    var updateDb = Authenticator.database().ref("programs").child(programString);
     console.log(updateDb);
     updateDb.once("value").then((snapshot) =>{
       for(let i=0; i<Object.keys(snapshot.val()).length; i++)
@@ -34,6 +39,26 @@ getCourseIDs() {
     });
 }
 
+
+verifySubmittedCourseTaken(courseString) {
+    let coursesAvailable =  []; 
+    updateDb.once("value").then((snapshot) => {
+        for(let i=0; i<Object.keys(snapshot.val()).length; i++)
+        {
+          courseAvailable.push(Object.keys(snapshot.val())[i]);
+          console.log("Course Available:");
+          console.log(this.courseAvailable[i]);
+        }
+      });
+    
+    var validString = true;
+    for(let i=0; i<coursesAvailable.length; i++){
+        if(courseString.localeCompare(coursesAvailable[i]) != 0 )
+            validString = false;
+    }
+
+    return validString;
+}
 
 handleKeyDown(e) {
     const { cursor, suggestions } = this.state
@@ -87,9 +112,19 @@ handleKeyDown(e) {
 
   onSubmit(e){
     e.preventDefault();
-    this.props.addCourse(this.state.text);
+    if(this.verifySubmittedCourseTaken(this.state.text))
+        this.props.addCourse(this.state.text);
+    else
+        console.log("Can not add this course"); 
     this.setState({text: ''});
 }
+
+  formatProgramString(programString){
+    var programString = this.state.program;
+    programString = programString.slice(1, programString.length-1);
+    return programString;
+  }
+
 
     onChange(e){return this.setState({[e.target.name]: e.target.value});}
 
