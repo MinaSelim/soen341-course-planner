@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 /*
     CourseService class communicates with the CourseDao class in order to access the data.
-    So the methods in this class are simply a call to the appropriate Dao method vis a CourseDao object
+    So the methods in this class are simply a call to the appropriate Dao method via a CourseDao object
  */
 
 @Service
