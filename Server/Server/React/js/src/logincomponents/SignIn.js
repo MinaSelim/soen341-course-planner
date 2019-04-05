@@ -58,7 +58,6 @@ const styles = theme => ({
 class SignIn extends Component{
   constructor(props){
     super(props);
-    console.log(this);
     this.login = this.login.bind(this);
     this.render = this.render.bind(this);
   }
@@ -68,7 +67,6 @@ class SignIn extends Component{
     const props = this.props;
     
     var idnumber=this.props.state.idnumber;
-    console.log(this.props);
     Authenticator.database().ref('users').orderByChild('idnumber').equalTo(idnumber).on("value", (snapshot) => {
       if(snapshot.val() != null)
     {
