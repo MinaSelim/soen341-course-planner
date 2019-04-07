@@ -9,6 +9,7 @@ import skynet.coordinator.Coordinator;
 import skynet.scheduler.common.ICourse;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,7 +48,7 @@ public class CoordinatorController {
         ArrayList<String> coursesTaken = new ArrayList<String>(Arrays.asList(info.getCoursesTaken()));
 
         try {
-            return Coordinator.getSequence(info.getProgramCode(), coursesTaken);
+            return getJsonSequence(Coordinator.getSequence(info.getProgramCode(), coursesTaken));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

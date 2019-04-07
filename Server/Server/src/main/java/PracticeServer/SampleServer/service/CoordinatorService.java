@@ -1,10 +1,18 @@
 package PracticeServer.SampleServer.service;
 
 import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
 import org.springframework.stereotype.Service;
 import skynet.scheduler.common.Course;
+import skynet.sequencer.Semester;
 
+import java.io.IOException;
+import java.io.FileNotFoundException;
+
+import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -38,15 +46,36 @@ public class CoordinatorService {
         return courses;
     }
 
-    public static List getJsonSequence(List sequence)
-    {
-        Gson parser = new Gson();
+    public static HashMap getJsonSequence(List<Semester> sequence) {
 
-        for (int i = 0; i < sequence.size(); i++) {
-             sequence.add(i, parser.toJson(sequence.get(i)));
+        Gson parser = new Gson();
+        parser = new GsonBuilder().setPrettyPrinting().create();
+
+        HashMap<String, ArrayList<String>> jsonSequence = new HashMap<>();
+        String semesterInfo;
+        String courseInfo;
+
+
+        for (int i = 0; i < sequence.size(); i++)
+        {
+            ArrayList <String> requiredCourses = new ArrayList<>();
+            
+            semesterInfo = sequence.get(i).getSeason() + " " + sequence.get(i).getYear();
+
+            for(int j = 0; j < sequence.get(i).getCourses().size(); j++)
+            {
+                courseInfo = sequence.get(i).getCourses().get(j).getCourseCode() + " " + sequence.get(i).getCourses().get(j).getCreditUnits();
+                requiredCourses.add(courseInfo);
+
+            }
+
+            jsonSequence.put(semesterInfo,requiredCourses);
+
         }
 
-        return sequence;
-    }
+        return jsonSequence;
 
+    }
 }
+
+
