@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonDeserialize
 public class SequenceInfo {
 
+    /*
+        The sequenceInfo object is an object containing the information given by the user,
+        which is required to generate the sequence
+     */
     String programCode;
     String [] coursesTaken;
 

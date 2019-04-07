@@ -6,10 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import skynet.coordinator.Coordinator;
-import skynet.scheduler.common.ICourse;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +21,10 @@ public class CoordinatorController {
     @Autowired
     private CoordinatorService coordinatorService;
 
+    /*
+    Get request to receive all information for each given course in a list.
+    Still has no relevant usage, can be properly implemented at a later time.
+     */
     @RequestMapping(method = RequestMethod.GET)
     public String getAllCourses()
     {
@@ -40,12 +42,14 @@ public class CoordinatorController {
         return coordinatorService.getJson(service.getCourses(course));
     }
 
+    /*
+    Post request to receive program name and courses taken from the front-end, to then use to generate
+    a sequence and send it back to the UI.
+     */
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Object sequeceInfo(@RequestBody SequenceInfo info)
     {
-
-        String programCode = info.getProgramCode();
-        ArrayList<String> coursesTaken = new ArrayList<String>(Arrays.asList(info.getCoursesTaken()));
+        ArrayList<String> coursesTaken = new ArrayList<>(Arrays.asList(info.getCoursesTaken()));
 
         try {
             return getJsonSequence(Coordinator.getSequence(info.getProgramCode(), coursesTaken));
