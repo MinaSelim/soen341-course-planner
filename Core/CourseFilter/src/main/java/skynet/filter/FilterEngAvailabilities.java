@@ -22,7 +22,8 @@ public class FilterEngAvailabilities
 	{
 		ArrayList<String> filter = new ArrayList<String>();
 
-		Scanner fileReader = new Scanner(new File("../CourseFilter/src/main/java/skynet/filter/EngAvailabilitiesSOEN.txt"));
+		//Scanner fileReader = new Scanner(new File("../CourseFilter/src/main/java/skynet/filter/EngAvailabilitiesSOEN.txt"));
+		Scanner fileReader = new Scanner(new File("../../Core/CourseFilter/src/main/java/skynet/filter/EngAvailabilitiesSOEN.txt"));
 
 		while(fileReader.hasNextLine()) filter.add(fileReader.nextLine());
 		
@@ -45,7 +46,8 @@ public class FilterEngAvailabilities
 	{
 		ArrayList<String> filter = new ArrayList<String>();
 
-		Scanner fileReader = new Scanner(new File("../CourseFilter/src/main/java/skynet/filter/EngAvailabilitiesSOEN.txt"));
+		//Scanner fileReader = new Scanner(new File("../CourseFilter/src/main/java/skynet/filter/EngAvailabilitiesSOEN.txt"));
+		Scanner fileReader = new Scanner(new File("../../Core/CourseFilter/src/main/java/skynet/filter/EngAvailabilitiesSOEN.txt"));
 
 		while(fileReader.hasNextLine()) filter.add(fileReader.nextLine());
 		
