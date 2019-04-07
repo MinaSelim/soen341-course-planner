@@ -73,4 +73,18 @@ public class Course implements ICourse
     	return priority; 
     }
 
+
+	@Override
+	public ICourse[] getCorequisites() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public String[] getCorequisitesAsCourseCodes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

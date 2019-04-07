@@ -54,8 +54,8 @@ public class ConcordiaApiParser
         List<String> pre = new ArrayList<String>();
         List<String> coreqs = new ArrayList<>();
 
-        if(element.get("subject").getAsString().equals("ENGR")
-        		&& element.get("catalog").getAsString().equals("391"))
+        if(element.get("subject").getAsString().equals("COMP")
+        		&& element.get("catalog").getAsString().equals("248"))
         	System.out.println("");
 
         if(prereq != null) {

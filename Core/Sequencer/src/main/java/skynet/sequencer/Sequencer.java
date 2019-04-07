@@ -99,7 +99,7 @@ public class Sequencer
         		for (int j = 0; j < taken.size(); j++) 
         		{
         			if (taken.get(j).getCourseCode().equals(required.get(i).getCourseCode()))
-        				required.remove(i);
+        				required.remove(i--);
         		}
         	}
         }

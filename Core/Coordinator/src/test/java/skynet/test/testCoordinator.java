@@ -56,7 +56,13 @@ public class testCoordinator
 		
 		taken = new ArrayList<String>();
 		taken.add("COMP248");
+		taken.add("COMP232");
+		taken.add("COMP348");
 		taken.add("COMP249");
+		taken.add("SOEN228");
+		taken.add("ENGR213");
+		taken.add("ENGR233");
+		taken.add("SOEN287");
 		
 		List<Semester> generatedSequence = Coordinator.getSequence("SOEN", taken);
 		
@@ -69,7 +75,7 @@ public class testCoordinator
 				++count;
 			}
 		}
-		assertEquals(required.size()-2, count);
+		assertEquals(required.size()-taken.size(), count);
 	}
 
 }

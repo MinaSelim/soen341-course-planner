@@ -135,6 +135,9 @@ public class CourseService
 
         String program = code.substring(0, index);
         String codeNum = code.substring(index);
+        
+        if(program.equals("COMP") && codeNum.equals("232"))
+        	System.out.println("");
 
         ICourse temp = getCourse(program, codeNum);
         return temp;
