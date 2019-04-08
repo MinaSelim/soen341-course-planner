@@ -33,6 +33,7 @@ class userPage extends Component {
       program: sessionStorage.getItem("program"),
       lname: sessionStorage.getItem("lname"),
       fname: sessionStorage.getItem("fname"),
+      email: sessionStorage.getItem("email"),
       courses: [],
     };
 
@@ -40,6 +41,7 @@ class userPage extends Component {
       program: sessionStorage.getItem("program"),
       lname: sessionStorage.getItem("lname"),
       fname: sessionStorage.getItem("fname"),
+      email: sessionStorage.getItem("email"),
       courses: [],
     }));
   
@@ -65,7 +67,6 @@ getuser(){
   if(this.props.state.user != null)
   {
     this.state.useremail= Object.keys(this.props.state.user)[12];
-    console.log(this.state.useremail);
     return this.state.useremail;
   }
 }
@@ -75,6 +76,24 @@ formatString(programString){
   var programString = this.state.program;
   programString = programString.slice(1, programString.length-1);
   return programString;
+}
+
+formatFName(NString){
+  var  NString = this.state.fname;
+  NString = NString.slice(1, NString.length-1);
+  return NString;
+}
+
+formatLName(LString){
+  var LString = this.state.lname;
+  LString = LString.slice(1, LString.length-1);
+  return LString;
+}
+
+formatEmail(MailString){
+  var MailString = this.state.email;
+  MailString = MailString.slice(1, MailString.length-1);
+  return MailString;
 }
 
  handleLogout(e){
@@ -91,8 +110,9 @@ formatString(programString){
   render() {
    
     var programString = this.formatString(this.state.program);
-    var fName = this.formatString(this.state.fname);
-    var lName = this.formatString(this.state.lname);
+    var fName = this.formatFName(this.state.fname);
+    var lName = this.formatLName(this.state.lname);
+    var eMail = this.formatEmail(this.state.email);
     return (
       <div className="App">
         <CardGroup>
@@ -100,7 +120,7 @@ formatString(programString){
             <Card style={profileStyle}>
               <CardImg src={studentIcon} alt="StudentLogo" style={profileImgStyle} />
               <p className='thick'>{lName}, {fName}</p>
-              <p className='normal'>{this.state.email}</p>
+              <p className='normal'>{eMail}</p>
             </Card>
             <div className='card'>
             <p className='thick'>Degree </p>

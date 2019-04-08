@@ -24,17 +24,13 @@ export class AddCourse extends Component {
 }
 
 getCourseIDs() {
-    console.log(this.state.program);
     var programString = this.state.program;
     programString = this.formatProgramString(programString);
-    console.log(programString);
     var updateDb = Authenticator.database().ref("programs").child(programString);
-    console.log(updateDb);
     updateDb.once("value").then((snapshot) =>{
       for(let i=0; i<Object.keys(snapshot.val()).length; i++)
       {
         this.courseIDs.push(Object.keys(snapshot.val())[i]);
-        console.log(this.courseIDs[i]);
       }
     });
 }
@@ -112,10 +108,7 @@ handleKeyDown(e) {
 
   onSubmit(e){
     e.preventDefault();
-    if(this.verifySubmittedCourseTaken(this.state.text))
-        this.props.addCourse(this.state.text);
-    else
-        console.log("Can not add this course"); 
+        this.props.addCourse(this.state.text); 
     this.setState({text: ''});
 }
 
