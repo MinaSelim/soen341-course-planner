@@ -9,3 +9,5 @@ node_modules/
 .gradle/
 build/
 .settings/
+out/
+.idea/
