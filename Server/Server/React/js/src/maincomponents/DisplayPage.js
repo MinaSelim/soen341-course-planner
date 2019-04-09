@@ -26,6 +26,7 @@ class DisplayPage extends Component{
             program: '',
             lname: '',
             fname: '',
+            idnumber: '',
             courses: [],
               }
               this.addCourse = this.addCourse.bind(this);
@@ -33,6 +34,7 @@ class DisplayPage extends Component{
               this.delCourse = this.delCourse.bind(this);
               this.formatString = this.formatString.bind(this);
               this.handleLogout = this.handleLogout.bind(this);
+              this.formatIDNumber = this.formatIDNumber.bind(this);
 
         
 
@@ -76,6 +78,12 @@ delCourse(id){
     NString = NString.slice(1, NString.length-1);
     return NString;
   }
+
+  formatIDNumber(idString){
+    var idString = this.state.idnumber;
+    idString = idtring.slice(1, idString.length-1);
+    return idString;
+  }
   
   formatLName(LString){
     var LString = this.state.lname;
@@ -91,13 +99,7 @@ delCourse(id){
 
   handleLogout(e){
     e.preventDefault();
-    const element = (
-      <Router>
-        <SignIn />
-      </Router>
-    );
-    
-    ReactDOM.render(element, document.getElementById('root'));
+    window.location.reload();
    }
   
     packageRequest(programString, coursesTaken){
@@ -113,6 +115,7 @@ delCourse(id){
           lname: sessionStorage.getItem("lname"),
           fname: sessionStorage.getItem("fname"),
           email: sessionStorage.getItem("email"),
+          idNumber: sessionStorage.getItem("idNumber"),
           courses: [],
         };
     
@@ -121,6 +124,7 @@ delCourse(id){
           lname: sessionStorage.getItem("lname"),
           fname: sessionStorage.getItem("fname"),
           email: sessionStorage.getItem("email"),
+          idnumber: sessionStorage.getItem("idNumber"),
           courses: [],
         }));
       
@@ -165,9 +169,15 @@ delCourse(id){
                      <p className='normal'>{programString} <br />Bachelor's Degree</p>
                      </div>
                      <Card style={{height: '72%'}}>
-                     <Link >
-                     <Button onClick={this.heandleLogout} style={LogoutStyle}>Logout</Button>
-                     </Link>
+                     <Button
+                        type="submit"
+                        variant="contained"
+                        color= 'primary'
+                        style={LogoutStyle}
+                        onClick={this.handleLogout}
+                       >
+                         Logout
+                      </Button>
                      </Card>
                      </div>
          

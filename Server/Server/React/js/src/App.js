@@ -66,6 +66,8 @@ class App extends Component {
     sessionStorage.setItem('lname', JSON.stringify(nextState.lname));
     sessionStorage.setItem('email', JSON.stringify(nextState.email));
     sessionStorage.setItem('program', JSON.stringify(nextState.program));
+    sessionStorage.setItem('idNumber', JSON.stringify(nextState.idnumber));
+   
   }
   authListener() {
     Authenticator.auth().onAuthStateChanged((user) => {

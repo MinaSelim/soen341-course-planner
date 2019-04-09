@@ -21,6 +21,7 @@ class userPage extends Component {
       program: '',
       lname: '',
       fname: '',
+      idnumber: '',
       courses: [],
     }
     this.addCourse = this.addCourse.bind(this);
@@ -101,13 +102,7 @@ formatEmail(MailString){
 
  handleLogout(e){
   e.preventDefault();
-  const element = (
-    <Router>
-      <SignIn />
-    </Router>
-  );
-  
-  ReactDOM.render(element, document.getElementById('root'));
+  window.location.reload();
  }
 
  handleGenerateSequence(e){
@@ -140,9 +135,15 @@ formatEmail(MailString){
             <p className='normal'>{programString} <br />Bachelor's Degree</p>
             </div>
             <Card style={{height: '72%'}}>
-            <Link >
-            <Button onClick={this.heandleLogout} style={LogoutStyle}>Logout</Button>
-            </Link>
+             <Button
+                type="submit"
+                variant="contained"
+                color= 'primary'
+                style={LogoutStyle}
+                onClick={this.handleLogout}
+              >
+                Logout
+              </Button>
             </Card>
      </div>
 
