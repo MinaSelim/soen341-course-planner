@@ -37,6 +37,7 @@ class DisplayPage extends Component{
             fname: '',
             idnumber: '',
             courses: [],
+            sequence: []
               }
               this.addCourse = this.addCourse.bind(this);
               this.getuser = this.getuser.bind(this);
@@ -134,7 +135,7 @@ delCourse(id){
           fname: sessionStorage.getItem("fname"),
           email: sessionStorage.getItem("email"),
           idnumber: sessionStorage.getItem("idNumber"),
-          courses: [],
+          courses: {},
         }));
       
       }
@@ -145,7 +146,6 @@ delCourse(id){
         var programString = this.formatString(this.state.program);
         var coursesTakenArray = JSON.parse(sessionStorage.getItem("coursesTaken"));
         var simpleArray = ["ENGR201", "COMP232"];
-        console.log("The courses taken before fetching: "+coursesTakenArray);
         
         fetch('http://localhost:8080/sequence', {
           method: 'POST',
@@ -160,10 +160,11 @@ delCourse(id){
         }).then((response) => {
           return response.json();
         }).then(jsonResponse => {
-          this.setState({
-            isLoaded:true
-          });
           console.log(jsonResponse);
+          this.setState({
+            isLoaded:true,
+            sequence: jsonResponse
+          });
         }).catch (error => {
           console.log(error)
         })
@@ -242,8 +243,9 @@ delCourse(id){
                    <Card style={OptionCardStyle}>
                      <CardTitle className="text-center"><h1><Badge style={badgeStyle} color="primary">Sequence Schedule</Badge></h1></CardTitle>
                          <Accordion>
-
-            
+                            {Object.keys(this.state.sequence).map((keyname, i) => (
+                              <SemesterItem key={i} semesterName={keyname} courses={this.state.sequence[keyname]}/>
+                            ))}
                          </Accordion>
                    </Card>
                  </CardGroup>

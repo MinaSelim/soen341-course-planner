@@ -21,31 +21,22 @@ import { BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import ReactDOM from 'react-dom';
 
 
-class SemesterItem extends Component(){
-    constructor(props){
-        super(props);
-    }
-
-
-    render(){
-        return(
+function SemesterItem (props){  
+    return(
             <AccordionItem>
             <AccordionItemHeading>
                 <AccordionItemButton>
-                    What harsh truths do you prefer to ignore?
+                    {props.semesterName}
                 </AccordionItemButton>
             </AccordionItemHeading>
             <AccordionItemPanel>
-                <p>
-                    Exercitation in fugiat est ut ad ea cupidatat ut in
-                    cupidatat occaecat ut occaecat consequat est minim minim
-                    esse tempor laborum consequat esse adipisicing eu
-                    reprehenderit enim.
-                </p>
+               {props.courses.map((course)=> (
+                   <div>{course}</div>
+               ))}
             </AccordionItemPanel>
         </AccordionItem>
         );
-    }
+    
 }
 
 export default SemesterItem;
