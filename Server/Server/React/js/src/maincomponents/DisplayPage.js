@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import { CardGroup, Badge, Card, CardImg, CardText,
   CardTitle, Button, Form, FormGroup,} from 'reactstrap';
+import {
+    Accordion,
+    AccordionItem,
+    AccordionItemHeading,
+    AccordionItemButton,
+    AccordionItemPanel,
+} from 'react-accessible-accordion';
+import SemesterItem from './SemesterItem';
+import 'react-accessible-accordion/dist/fancy-example.css';
 import Courses from './Courses';
 import AddCourse from './AddCourse';
 import studentIcon from './images/student_icon.png';
@@ -131,31 +140,45 @@ delCourse(id){
       }
     
 
-   /** componentDidMount(){
-        fetch('localhost:8080/sequence'), {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-
-            body: JSON.stringify({
-                programCode: this.formatProgramString(this.state.program),
-                coursesTaken: this.state.coursesTaken
-            })
-
-        }
+   componentDidMount(){
+    
+        var programString = this.formatString(this.state.program);
+        var coursesTakenArray = JSON.parse(sessionStorage.getItem("coursesTaken"));
+        var simpleArray = ["ENGR201", "COMP232"];
+        console.log("The courses taken before fetching: "+coursesTakenArray);
+        
+        fetch('http://localhost:8080/sequence', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            "programCode": programString,
+            "coursesTaken": coursesTakenArray
+          })
+        }).then((response) => {
+          return response.json();
+        }).then(jsonResponse => {
+          this.setState({
+            isLoaded:true
+          });
+          console.log(jsonResponse);
+        }).catch (error => {
+          console.log(error)
+        })
     }
-    */ 
+  
 
     render(){
         var programString = this.formatString(this.state.program);
         var fName = this.formatFName(this.state.fname);
         var lName = this.formatLName(this.state.lname);
         var eMail = this.formatEmail(this.state.email);
-        return(
-
-           
-
+        const { isLoaded } = this.state;
+        
+        if(!isLoaded){
+          return(
             <div className="App">
                  <CardGroup>
                    <div>
@@ -164,10 +187,10 @@ delCourse(id){
                        <p className='thick'>{lName}, {fName}</p>
                        <p className='normal'>{eMail}</p>
                      </Card>
-                     <div className='card'>
-                     <p className='thick'>Degree </p>
-                     <p className='normal'>{programString} <br />Bachelor's Degree</p>
-                     </div>
+                       <div className='card'>
+                         <p className='thick'>Degree </p>
+                         <p className='normal'>{programString} <br />Bachelor's Degree</p>
+                       </div>
                      <Card style={{height: '72%'}}>
                      <Button
                         type="submit"
@@ -180,16 +203,55 @@ delCourse(id){
                       </Button>
                      </Card>
                      </div>
-         
-         
                    <Card style={OptionCardStyle}>
                      <CardTitle className="text-center"><h1><Badge style={badgeStyle} color="primary">Sequence Schedule</Badge></h1></CardTitle>
-                    
+                       <div className="loaderContainer">
+                         <div className="loader"></div>
+                       </div>   
+                   </Card>
+                 </CardGroup>
+               </div>
+            
+        );}
+        else{
+          return(
+            <div className="App">
+                 <CardGroup>
+                   <div>
+                     <Card style={profileStyle}>
+                       <CardImg src={studentIcon} alt="StudentLogo" style={profileImgStyle} />
+                       <p className='thick'>{lName}, {fName}</p>
+                       <p className='normal'>{eMail}</p>
+                     </Card>
+                       <div className='card'>
+                         <p className='thick'>Degree </p>
+                         <p className='normal'>{programString} <br />Bachelor's Degree</p>
+                       </div>
+                     <Card style={{height: '72%'}}>
+                     <Button
+                        type="submit"
+                        variant="contained"
+                        color= 'primary'
+                        style={LogoutStyle}
+                        onClick={this.handleLogout}
+                       >
+                         Logout
+                      </Button>
+                     </Card>
+                     </div>
+                   <Card style={OptionCardStyle}>
+                     <CardTitle className="text-center"><h1><Badge style={badgeStyle} color="primary">Sequence Schedule</Badge></h1></CardTitle>
+                         <Accordion>
+
+            
+                         </Accordion>
                    </Card>
                  </CardGroup>
                </div>
             
         );
+
+        }
     }
 }
 

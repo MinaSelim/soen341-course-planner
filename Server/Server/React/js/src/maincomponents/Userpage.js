@@ -11,6 +11,7 @@ import SignIn from '../logincomponents/SignIn.js';
 import { BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import DisplayPage from './DisplayPage.js';
 import ReactDOM from 'react-dom';
+import { parse } from 'querystring';
 
 
 class userPage extends Component {
@@ -22,14 +23,14 @@ class userPage extends Component {
       lname: '',
       fname: '',
       idnumber: '',
-      courses: [],
+      courses: []
     }
     this.addCourse = this.addCourse.bind(this);
     this.getuser = this.getuser.bind(this);
     this.delCourse = this.delCourse.bind(this);
     this.formatString = this.formatString.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
-    //this.handleGenerateSequence = this.handleGenerateSequence.bind(this);
+    this.handleGenerateSequence = this.handleGenerateSequence.bind(this);
   }
 
   componentWillMount(){ 
@@ -64,7 +65,14 @@ addCourse(title){
     id: uuid.v4(),
     title,
   }
+  if(this.state.courses.length == 0){
+    this.setState({courses: [newCourse]});
+    //console.log(this.state.courses[0]);
+  }
   this.setState({courses: [...this.state.courses, newCourse]});
+  //console.log(this.state.courses[0]);
+
+  
 }
 
 getuser(){
@@ -105,8 +113,15 @@ formatEmail(MailString){
   window.location.reload();
  }
 
- handleGenerateSequence(e){
-   e.preventDefault();
+ handleGenerateSequence(){
+  
+   console.log(this.state);
+   var coursesArray = [];
+   for(var i=0; i<this.state.courses.length; i++){
+     coursesArray[i] = this.state.courses[i].title;   
+   }
+  
+   sessionStorage.setItem("coursesTaken", JSON.stringify(coursesArray));
    const element = (
     <Router>
       <DisplayPage/>
