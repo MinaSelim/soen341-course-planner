@@ -119,7 +119,7 @@ public class Coordinator
 		 * simply could not figure out a better way to design the code
 		 * without having access to the other modules */
 		fetchedCourses = new ArrayList<ICourse>();
-
+		fetchedTaken = new ArrayList<Course>();
 		service = new CourseService("132","6a388ea97bb3d994c699760a7ee01472");
 		
 		/* When the server calls our application, it passes with it an argument 

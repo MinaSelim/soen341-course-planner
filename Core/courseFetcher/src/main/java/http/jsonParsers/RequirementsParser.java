@@ -39,7 +39,6 @@ public class RequirementsParser{
 
         else{
             content = content.replaceAll("," , "");
-            System.out.println(content);
              //check for previously or concorently
             Matcher pocMacther = Pattern.compile("(?:[A-Za-z]{4}(?:[0-9]{3})+|[A-Za-z]{4}[0-9]{3}or[A-Za-z]{4}[0-9]{3})POC").matcher(content);
             
