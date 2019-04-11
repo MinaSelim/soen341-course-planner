@@ -50,7 +50,7 @@ public class CourseFilter
 		ArrayList<String> filter = new ArrayList<String>();
 
 		//Scanner fileReader = new Scanner(new File("../CourseFilter/src/main/java/skynet/filter/"+program+"filter.txt"));
-		Scanner fileReader = new Scanner(new File("../../Core/CourseFilter/src/main/java/skynet/filter/"+program+"filter.txt"));
+		Scanner fileReader = new Scanner(new File("Core/CourseFilter/src/main/java/skynet/filter/"+program+"filter.txt"));
 
 		while(fileReader.hasNextLine()) filter.add(fileReader.nextLine());
 		
