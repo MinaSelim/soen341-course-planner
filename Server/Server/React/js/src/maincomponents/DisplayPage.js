@@ -242,11 +242,13 @@ delCourse(id){
                      </div>
                    <Card style={OptionCardStyle}>
                      <CardTitle className="text-center"><h1><Badge style={badgeStyle} color="primary">Sequence Schedule</Badge></h1></CardTitle>
-                         <Accordion>
+                        <div style={CompletedCardStyle}>
+                         <Accordion allowMultipleExpanded={true}>
                             {Object.keys(this.state.sequence).map((keyname, i) => (
                               <SemesterItem key={i} semesterName={keyname} courses={this.state.sequence[keyname]}/>
                             ))}
                          </Accordion>
+                        </div>
                    </Card>
                  </CardGroup>
                </div>
@@ -269,6 +271,7 @@ const profileImgStyle = {
     cursor: 'pointer',
     float: 'left'
   }
+
   
   const OptionCardStyle = {
     height: "900px",
@@ -280,10 +283,7 @@ const profileImgStyle = {
   
   }
   const CompletedCardStyle = {
-    height: "900px",
-    width: "780px",
-    border: "none" ,
-    padding: '10px ',
+    
     overflow: 'hidden scroll'
   
   }
