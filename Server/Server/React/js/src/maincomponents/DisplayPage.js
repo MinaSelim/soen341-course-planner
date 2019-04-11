@@ -243,7 +243,7 @@ delCourse(id){
                    <Card style={OptionCardStyle}>
                      <CardTitle className="text-center"><h1><Badge style={badgeStyle} color="primary">Sequence Schedule</Badge></h1></CardTitle>
                         <div style={CompletedCardStyle}>
-                         <Accordion allowMultipleExpanded={true}>
+                         <Accordion allowMultipleExpanded={true} allowZeroExpanded={true}>
                             {Object.keys(this.state.sequence).map((keyname, i) => (
                               <SemesterItem key={i} semesterName={keyname} courses={this.state.sequence[keyname]}/>
                             ))}
