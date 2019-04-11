@@ -43,6 +43,12 @@ public class Sequencer {
 		}
 	}
 
+	private static void adjustProgramElectivePriority(List<Course> required) {
+		for (Course course : required)
+			if (course.getCourseCode().contentEquals("Program Elective"))
+				course.setPriority(-1);
+	}
+	
 	private static void updateAvailability_refactored(List<Course> taken, List<Course> required,
 			List<Course> available) {
 		// Two wave approach
@@ -132,11 +138,17 @@ public class Sequencer {
 		 * Step 1: Verify if any courses in taken list correspond to required. If True,
 		 * remove the corresponding course from required list.
 		 */
+		
+		double totalCreditsTaken = 0.0; 
 
 		// Refactored Step 1 - untested
 		for (Course takenCourse : taken)
 			if (contains(takenCourse, required))
+			{
+				String courseCode = takenCourse.getCourseCode();
+				totalCreditsTaken += getCourseFromListByCourseCode(required, courseCode).getCreditUnits();
 				required.remove(takenCourse);
+			}
 
 		/*
 		 * Step 2: Set the level of priority to each course within the required list.
@@ -148,6 +160,7 @@ public class Sequencer {
 
 		adjustPriorityForAvailability(required);
 		
+		adjustProgramElectivePriority(required); 
 		
 //		System.out.println("Displaying priorities");
 //
@@ -232,8 +245,20 @@ public class Sequencer {
 					} 
 					else // the course is offered and there are no coreqs
 					{
-						registeredCourses.add(course);
-						totalCredits += course.getCreditUnits();
+						if (course.getCourseCode().contentEquals("Capstone(1)"))
+						{
+							if (totalCreditsTaken >= 75)
+							{
+								registeredCourses.add(course);
+								totalCredits += course.getCreditUnits();
+							}
+						}
+						else 
+						{
+							registeredCourses.add(course);
+							totalCredits += course.getCreditUnits();
+						}
+						
 					}
 				}
 
@@ -241,6 +266,9 @@ public class Sequencer {
 					break;
 			}
 
+			
+			totalCreditsTaken += totalCredits; 
+			
 			// Create current semester
 			Semester currentSemester = new Semester(currentSeason, year, registeredCourses);
 			sequence.add(currentSemester);
@@ -252,7 +280,7 @@ public class Sequencer {
 			}
 
 			registeredCourses = new ArrayList<Course>();
-			Course bcee = getCourseFromListByID(available, "BCEE371");
+			Course bcee = getCourseFromListByCourseCode(available, "BCEE371");
 
 			if (bcee != null && currentSeason == SemesterSeasons.Winter) {
 				List<Course> register = new ArrayList<Course>();
@@ -299,9 +327,9 @@ public class Sequencer {
 		}
 	}
 
-	private static Course getCourseFromListByID(List<Course> courses, String id) {
+	private static Course getCourseFromListByCourseCode(List<Course> courses, String courseCode) {
 		for (Course c : courses) {
-			if (c.getCourseCode().equals(id)) {
+			if (c.getCourseCode().equals(courseCode)) {
 				return c;
 			}
 		}
