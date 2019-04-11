@@ -146,8 +146,9 @@ public class Sequencer {
 			if (contains(takenCourse, required))
 			{
 				String courseCode = takenCourse.getCourseCode();
-				totalCreditsTaken += getCourseFromListByCourseCode(required, courseCode).getCreditUnits();
-				required.remove(takenCourse);
+				Course requiredCourse = getCourseFromListByCourseCode(required, courseCode);
+				totalCreditsTaken += requiredCourse.getCreditUnits();
+				required.remove(requiredCourse);
 			}
 
 		/*

@@ -176,11 +176,6 @@ public class Coordinator
 			System.out.println();
 		}
 		
-		/* TEMPORARY FIX: A list of Taken courses is passed to the sequencer
-		 * These courses are pre-UnderGrad requirements */
-		List<Course> taken = new ArrayList<Course>();
-	
-		
 		/* Filter out prerequisites that are not part of the program */
 		filterPrereqsOutsideOfProgram(fetchedCourses, requiredCourses);
 		
@@ -207,7 +202,7 @@ public class Coordinator
 		SpecialCoursesHandler.handleEncs282Case(ConvertedList);
 
 		/* Finally, Generate a sequence */
-		sequence = Sequencer.generateSequence(taken, ConvertedList);
+		sequence = Sequencer.generateSequence(fetchedTaken, ConvertedList);
 		
 		/* Display the Sequence */
         System.out.println("Displaying Sequence");
