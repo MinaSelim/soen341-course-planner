@@ -1,18 +1,22 @@
 package PracticeServer.SampleServer.contoller;
 
-import PracticeServer.SampleServer.entity.SequenceInfo;
-import PracticeServer.SampleServer.service.CoordinatorService;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import skynet.coordinator.Coordinator;
+import static PracticeServer.SampleServer.service.CoordinatorService.getJsonSequence;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static PracticeServer.SampleServer.service.CoordinatorService.getJsonSequence;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import PracticeServer.SampleServer.entity.SequenceInfo;
+import PracticeServer.SampleServer.service.CoordinatorService;
+import skynet.coordinator.Coordinator;
 
 @RestController
 @RequestMapping("/sequence")
@@ -53,7 +57,7 @@ public class CoordinatorController {
 
         try {
             return getJsonSequence(Coordinator.getSequence(info.getProgramCode(), coursesTaken));
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "Error";
