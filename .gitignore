@@ -11,4 +11,3 @@ build/
 .settings/
 out/
 .idea/
-Server\Server\src\main\resources\static\index_bundle.js
