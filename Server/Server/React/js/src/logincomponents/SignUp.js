@@ -19,6 +19,10 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import './Login.css';
 import Main from '../maincomponents/Userpage.js';
 import SignIn from './SignIn';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { Select } from '@material-ui/core';
 
 
 const styles = theme => ({
@@ -51,6 +55,10 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 3,
     width: '50%',
   },
+  menu: {
+    width: '100%', 
+    marginTop: theme.spacing.unit * 3,
+  }
 });
 
 function SignUp(props) {
@@ -91,8 +99,27 @@ function SignUp(props) {
             <Input id="email" name="email" autoFocus autoComplete="email" value={props.state.email} onChange={props.handleChange.bind(this)}/>
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="program">Program</InputLabel>
-            <Input name="program" type="program" id="program" value={props.state.program} onChange={props.handleChange.bind(this)}/>
+          <MuiThemeProvider>
+          <InputLabel htmlFor={props.state.program}>Program</InputLabel>
+          <Select
+          value={props.state.program} 
+          onChange={props.handleChange.bind(this)} 
+          inputProps={{
+            name: "program",
+            id: "",
+          }}
+          className= {classes.menu}
+         >
+          <MenuItem value={"SOEN"} >SOEN</MenuItem>
+          <MenuItem value={"COEN"} >COEN</MenuItem>
+          <MenuItem value={"COMP"} >COMP</MenuItem>
+          <MenuItem value={"ELEC"} >ELEC</MenuItem>
+          <MenuItem value={"CIVI"} >CIVI</MenuItem>
+          <MenuItem value={"BLDG"} >BLDG</MenuItem>
+          <MenuItem value={"MECH"} >MECH</MenuItem>
+          <MenuItem value={"INDU"} >INDU</MenuItem>
+          </Select>
+        </MuiThemeProvider>
           </FormControl>
           <FormControl margin="normal" required fullWidth>
             <InputLabel htmlFor="fname">First Name</InputLabel>
@@ -133,7 +160,7 @@ function SignUp(props) {
       var email=props.state.email;
       var program=props.state.program;
       var idnumber=props.state.idnumber;
-
+      
       if (user !== null) 
       {
         database.ref('users').child(userID).set({
@@ -151,7 +178,9 @@ function SignUp(props) {
         </Router>
       );
       ReactDOM.render(element, document.getElementById('root'));
-    })
+    }).catch(error => {
+      alert(error.message);
+});
   }
 }
 

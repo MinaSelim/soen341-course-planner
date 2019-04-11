@@ -80,6 +80,11 @@ class SignIn extends Component{
     this.props.changeFname(fname);
     this.props.changeLname(lname);
     this.props.changeProgram(program);
+    } 
+    else
+    {
+      var email = "";
+    }
   
     Authenticator.auth().signInWithEmailAndPassword(email, props.state.password).then((user)=>{
     }).then(()=>{
@@ -91,9 +96,10 @@ class SignIn extends Component{
       );
       ReactDOM.render(element, document.getElementById('root'));
       
-     })
-    }
+     }).catch(error => {
+      alert("Invalid user");
     });
+  });
   }
 
   render(){
