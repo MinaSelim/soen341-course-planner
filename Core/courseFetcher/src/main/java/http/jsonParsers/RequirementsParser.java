@@ -16,31 +16,45 @@ public class RequirementsParser{
     static Pattern prereqPattern = Pattern.compile("P:(?:[A-Za-z]{4}(?:[0-9]{3})+(?:or)*)+");
     static Pattern courseSeriePattern = Pattern.compile("(?<!or)[A-Za-z]{4}(?:[0-9]{3})+(?!or)");
     static Pattern testPattern = Pattern.compile("[A-Za-z]{4}[0-9]{3}");
-
     public static String reformat(String content){
 
-            content = content.replaceAll("-","");
-            content = content.replaceAll("\\s|;|:|/|and" , "");
-            content = content.replaceAll("(?i)Prerequisite","P:");
-            content = content.replaceAll("(?i)Corequisite", "C:");
-            content = content.replaceAll("(?i)notregistered" , "");
-            content = content.replaceAll("(?i)NeverTaken" , "NT:");
-            content = content.replaceAll("(?i)Course" , "");
-            String[] contentArr = content.split("(?i)Youmustcomplete1ofthefollowingrules");
+        content = content.replaceAll("-","");
+        content = content.replaceAll("\\s|;|:|/|and|\\." , "");
+        content = content.replaceAll("(?i)Prerequisite","P:");
+        content = content.replaceAll("(?i)Corequisite", "C:");
+        content = content.replaceAll("(?i)notregistered" , "");
+        content = content.replaceAll("(?i)NeverTaken" , "NT:");
+        content = content.replaceAll("(?i)Course" , "");
+        content = content.replaceAll("(?i)previouslyorconcurrently" , "POC");
+        String[] contentArr = content.split("(?i)Youmustcomplete1ofthefollowingrules");
+       
 
-            if(contentArr.length == 2){
-            StringBuilder result = new StringBuilder(contentArr[0]);
-            String content2 = contentArr[1].replaceAll("(?i)You must complete 1 of the following rules" , "");
-            content2 = content2.replaceAll(",|;" , "or");
-            result.append(content2);
-            return result.toString();
-        	}
+        if(contentArr.length == 2){
+        StringBuilder result = new StringBuilder(contentArr[0]);
+        String content2 = contentArr[1].replaceAll("(?i)You must complete 1 of the following rules" , "");
+        content2 = content2.replaceAll(",|;" , "or");
+        result.append(content2);
+        return result.toString();
+        }
 
-        	else{
-        		content.replaceAll("," , "");
-        		return content;
-        	}
-    }
+        else{
+            content = content.replaceAll("," , "");
+            System.out.println(content);
+             //check for previously or concorently
+            Matcher pocMacther = Pattern.compile("(?:[A-Za-z]{4}(?:[0-9]{3})+|[A-Za-z]{4}[0-9]{3}or[A-Za-z]{4}[0-9]{3})POC").matcher(content);
+            
+            if(pocMacther.find()){
+                String part2 = content.substring(pocMacther.start());
+                StringBuilder sb = new StringBuilder(content.substring(0, pocMacther.start()));
+                sb.append("C:");
+                sb.append(part2);
+                content = sb.toString();
+                content = content.replaceAll("(?i)POC","");
+            }
+
+            return content;
+        }
+}
             
 
     
