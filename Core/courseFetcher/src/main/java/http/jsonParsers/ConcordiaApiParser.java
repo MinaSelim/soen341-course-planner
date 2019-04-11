@@ -1,19 +1,22 @@
 package http.jsonParsers;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import availability.Availability;
-import availability.AvailabilityProvider;
-import services.CourseService;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import skynet.scheduler.common.*;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import availability.Availability;
+import availability.AvailabilityProvider;
+import services.CourseService;
+import skynet.scheduler.common.Course;
+import skynet.scheduler.common.ICourse;
+import skynet.scheduler.common.SemesterSeasons;
  
 public class ConcordiaApiParser 
 {
@@ -81,7 +84,7 @@ public class ConcordiaApiParser
                 coreqArray,
                 element.get("subject").getAsString(),
                 element.get("catalog").getAsString(),
-                (int)element.get("classUnit").getAsDouble(),
+                element.get("classUnit").getAsDouble(),
                 element.get("career").getAsString()
         );
 

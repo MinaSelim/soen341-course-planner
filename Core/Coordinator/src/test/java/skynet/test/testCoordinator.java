@@ -3,6 +3,7 @@ package skynet.test;
 import static org.junit.Assert.assertEquals;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class testCoordinator
 	private static List<String> taken;
 	
 	//@Test
-	public void testGetSequenceSOEN() throws FileNotFoundException
+	public void testGetSequenceSOEN() throws Exception
 	{
 		/*
 		 * This test simply verifies if the output sequence contains the expected
@@ -45,7 +46,7 @@ public class testCoordinator
 	}
 	
 	//@Test
-	public void testGetSequenceSOENwithTaken() throws FileNotFoundException
+	public void testGetSequenceSOENwithTaken() throws Exception
 	{
 		/*
 		 * This test verifies if the taken functionality works as expected.

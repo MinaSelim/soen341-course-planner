@@ -1,7 +1,6 @@
 package skynet.coordinator;
 
 import static skynet.scheduler.common.SemesterSeasons.Fall;
-import static skynet.scheduler.common.SemesterSeasons.Summer;
 import static skynet.scheduler.common.SemesterSeasons.Winter;
 
 import java.util.ArrayList;
@@ -143,4 +142,34 @@ public class SpecialCoursesHandler
 		
 		return prereqs;
 	}
+	
+	public static void handleEncs282Case(List<Course> courses)
+    {
+        Course encs282  =getCourseFromListByID(courses, "ENCS282");
+        if(encs282 != null)
+        {
+            Course encs271  =getCourseFromListByID(courses, "ENCS271");
+            if(encs271 == null)
+            {
+                Course engr = getCourseFromListByID(courses, "ENGR213");
+                ICourse[] prereqs = new ICourse[1];
+                prereqs[0] = engr;
+                encs282.setPrerequisites(prereqs);
+            }
+
+        }
+    }
+
+
+    private static Course getCourseFromListByID(List<Course> courses, String id)
+    {
+        for(Course c : courses)
+        {
+            if(c.getCourseCode().equals(id))
+            {
+                return c;
+            }
+        }
+        return null;
+    }
 }
