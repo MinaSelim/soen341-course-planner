@@ -65,14 +65,26 @@ addCourse(title){
     id: uuid.v4(),
     title,
   }
+  if(title != "")
+  {
   if(this.state.courses.length == 0){
     this.setState({courses: [newCourse]});
     //console.log(this.state.courses[0]);
   }
-  this.setState({courses: [...this.state.courses, newCourse]});
-  //console.log(this.state.courses[0]);
-
-  
+  else
+  {
+    for (var i=0; i < this.state.courses.length; i++) {
+        if( this.state.courses[i].title== title)
+        {
+          break;
+        }
+        if(i==this.state.courses.length-1)
+        {
+        this.setState({courses: [...this.state.courses, newCourse]});
+        }
+    }
+  }
+}
 }
 
 getuser(){
