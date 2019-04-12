@@ -1,2 +1,3 @@
 gradle run --args="C:\\projects\\soen341-course-planner\\Apps\\SkynetSequencerApp\\SampleCommandFiles\\SOEN.txt C:\\projects\\soen341-course-planner\\Apps\\SkynetSequencerApp\\SampleCommandFiles\\SOENTaken.txt" 
 gradle run --args="C:\\projects\\soen341-course-planner\\Apps\\SkynetSequencerApp\\SampleCommandFiles\\COEN.txt C:\\projects\\soen341-course-planner\\Apps\\SkynetSequencerApp\\SampleCommandFiles\\COENTaken.txt" 
+gradle run --args="C:\\projects\\soen341-course-planner\\Apps\\SkynetSequencerApp\\SampleCommandFiles\\BLDG.txt C:\\projects\\soen341-course-planner\\Apps\\SkynetSequencerApp\\SampleCommandFiles\\BLDGTaken.txt" 

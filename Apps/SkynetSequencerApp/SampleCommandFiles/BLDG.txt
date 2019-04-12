@@ -29,6 +29,7 @@ ENGR371
 ENGR391
 CIVI321
 CIVI432
+ELEC275
 SPECGeneralElective
 SPECProgramElective
 SPECProgramElective

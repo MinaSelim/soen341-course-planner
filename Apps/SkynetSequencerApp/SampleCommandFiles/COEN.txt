@@ -28,6 +28,7 @@ COEN346
 COEN352
 COEN390
 COEN445
+SOEN341
 SPECGeneralElective
 SPECProgramElective
 SPECProgramElective
