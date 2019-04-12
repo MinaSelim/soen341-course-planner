@@ -1,0 +1,14 @@
+rootProject.name = 'sampleApp'
+
+include ':Coordinator'
+project(':Coordinator').projectDir = new File(settingsDir, "../../Core/Coordinator")
+include ':CourseFilter'
+project(':CourseFilter').projectDir = new File(settingsDir,"../../Core/CourseFilter")
+include ':Common'
+project(':Common').projectDir = new File(settingsDir,"../../Common")
+include ':courseFetcher'
+project(':courseFetcher').projectDir = new File(settingsDir,"../../Core/courseFetcher")
+include ':Sequencer'
+project(':Sequencer').projectDir = new File(settingsDir,"../../Core/Sequencer")
+include ':Coordinator'
+project(':Coordinator').projectDir = new File(settingsDir, "../../Core/Coordinator")

@@ -18,7 +18,7 @@ public class CourseFilter
 	 * @param unfilteredCourses List containing all generic ICourse objects to be filtered
 	 * @return List<ICourse>
 	 */
-	public static List<ICourse> FilterListForProgram(List<ICourse> unfilteredCourses, List<String> filter) throws IOException
+	public static List<ICourse> FilterListForProgram(List<ICourse> unfilteredCourses, List<String> filter)
 	{
 		//If unfilteredCourses is null, return empty list.
 		if(unfilteredCourses == null)

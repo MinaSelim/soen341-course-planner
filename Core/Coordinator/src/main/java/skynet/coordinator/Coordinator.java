@@ -60,12 +60,7 @@ public class Coordinator
 		for(ICourse course : fetchedCourses)
 		{
 			List<ICourse> prereqs = Arrays.asList(course.getPrerequisites());
-			try {
-				prereqs = CourseFilter.FilterListForProgram(prereqs, filter);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
+			prereqs = CourseFilter.FilterListForProgram(prereqs, filter);
 			ICourse[] filteredPrereqs = new ICourse[prereqs.size()];
 			prereqs.toArray(filteredPrereqs);
 			((Course)course).setPrerequisites(filteredPrereqs);
@@ -78,11 +73,9 @@ public class Coordinator
 		for(ICourse course : fetchedCourses)
 		{
 			List<ICourse> coreqs = Arrays.asList(course.getCorequisites());
-			try {
-				coreqs = CourseFilter.FilterListForProgram(coreqs, filter);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	
+			coreqs = CourseFilter.FilterListForProgram(coreqs, filter);
+			
 			
 			ICourse[] filteredCoreqs = new ICourse[coreqs.size()];
 			coreqs.toArray(filteredCoreqs);
@@ -168,13 +161,13 @@ public class Coordinator
 		 * Outputs every course object in the filteredList as well as its
 		 * prerequisites.
 		 * */
-		for(int i = 0; i < fetchedCourses.size(); ++i)
+	/*	for(int i = 0; i < fetchedCourses.size(); ++i)
 		{
 			System.out.println("Course: "+fetchedCourses.get(i).getCourseCode());
 			for(int j = 0; j < fetchedCourses.get(i).getPrerequisites().length; ++j)
 				System.out.println(fetchedCourses.get(i).getPrerequisites()[j].getCourseCode());
 			System.out.println();
-		}
+		}*/
 		
 		/* Filter out prerequisites that are not part of the program */
 		filterPrereqsOutsideOfProgram(fetchedCourses, requiredCourses);
@@ -203,15 +196,99 @@ public class Coordinator
 
 		/* Finally, Generate a sequence */
 		sequence = Sequencer.generateSequence(fetchedTaken, ConvertedList);
+	
+		return sequence;
+	}
+	
+	public static List<Semester> getSequence(ArrayList<String> requiredCourses, ArrayList<String> takenAsString)
+	{
+		/* Instantiate the class objects 
+		 * Obviously those will not be null in the final,
+		 * simply could not figure out a better way to design the code
+		 * without having access to the other modules */
+		fetchedCourses = new ArrayList<ICourse>();
+		fetchedTaken = new ArrayList<Course>();
+
+		service = new CourseService("132","6a388ea97bb3d994c699760a7ee01472");
 		
-		/* Display the Sequence */
-        System.out.println("Displaying Sequence");
-        for (Semester i : sequence)
-        {
-        	System.out.println(" Semester : " + i.getSeason());
-        	for(ICourse c : i.getCoursesScheduled())
-        		System.out.println("\t" + c.getCourseCode() + " (" + c.getCreditUnits() + ")");
-        }
+		/* When the server calls our application, it passes with it an argument 
+		 * which indicates for which program we want a sequence 
+		 * E.g. : >sequencer SOEN 
+		 * Obviously, this is very bare bones for now, later on we can add more arguments
+		 * for information on already completed courses which the user has specified
+		 * on the front end.*/
+		
+		ArrayList<String> requiredCourseCodesForQuery = getQueryCourseCodes(requiredCourses);
+		
+		ArrayList<CoursesFetcherThread> fetchers = new ArrayList<CoursesFetcherThread>();
+		
+		for(String courseCode : requiredCourseCodesForQuery)
+		{
+			CoursesFetcherThread fetcher = new CoursesFetcherThread(courseCode, requiredCourses);
+			fetcher.start();
+			fetchers.add(fetcher);
+		}
+		
+		for(CoursesFetcherThread t1 : fetchers)
+		{
+			try {
+				t1.join();
+			} catch (InterruptedException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+
+		if(takenAsString.size() != 0)
+		{
+			for(String i : takenAsString)
+			{
+				addCourse(i.substring(0,4), i.substring(4), fetchedTaken);
+			}
+		}
+
+		/* The next step is to filter out all the courses that are not required for
+		 * specified degree */
+		fetchedCourses = CourseFilter.FilterListForProgram(fetchedCourses, requiredCourses);
+		
+		/* This is a debug tool output.
+		 * Outputs every course object in the filteredList as well as its
+		 * prerequisites.
+		 * */
+	/*	for(int i = 0; i < fetchedCourses.size(); ++i)
+		{
+			System.out.println("Course: "+fetchedCourses.get(i).getCourseCode());
+			for(int j = 0; j < fetchedCourses.get(i).getPrerequisites().length; ++j)
+				System.out.println(fetchedCourses.get(i).getPrerequisites()[j].getCourseCode());
+			System.out.println();
+		}
+		*/
+		
+		/* Filter out prerequisites that are not part of the program */
+		filterPrereqsOutsideOfProgram(fetchedCourses, requiredCourses);
+		
+		/* Filter out prerequisites that are not part of the program */
+		filterCoreqsOutsideOfProgram(fetchedCourses, requiredCourses);
+		
+		/* Next, Attach the available seasons to each course object in the filtered List
+		 */
+		AttachSeason.attachSeasons(fetchedCourses, service);
+		
+		/* Convert List of ICourse to a Compatible List of Course objects */
+		List<Course> ConvertedList = new ArrayList<Course>();
+		for(ICourse i : fetchedCourses)
+			ConvertedList.add((Course)i);
+		
+		
+		// add special courses
+		SpecialCoursesHandler.addSpecialCoursesToTheList(ConvertedList, requiredCourses);
+		
+		SpecialCoursesHandler.handleEncs282Case(ConvertedList);
+
+		/* Finally, Generate a sequence */
+		List<Semester> sequence = Sequencer.generateSequence(fetchedTaken, ConvertedList);
+		
+
 		return sequence;
 	}
 }

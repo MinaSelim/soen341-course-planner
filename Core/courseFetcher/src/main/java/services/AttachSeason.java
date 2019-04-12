@@ -69,15 +69,15 @@ class AttachSeasonToCourse implements Runnable{
     public void run() {
         try {
 
-            System.out.println("Getting season for " + c.getCourseCode());
+         //   System.out.println("Getting season for " + c.getCourseCode());
 
             List<SemesterSeasons> season = service.getSeasonForCourse(c);
             c.setCourseAvailability(season);
-            System.out.println(c.getCourseCode() + " " + season.toString());
+            //System.out.println(c.getCourseCode() + " " + season.toString());
 
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Unable to get season for " + c.getCourseCode());
+        //    System.out.println("Unable to get season for " + c.getCourseCode());
         }
     }
 }

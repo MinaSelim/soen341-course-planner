@@ -1,0 +1,30 @@
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'application'
+
+repositories {
+	mavenCentral()
+}
+
+distZip {
+    archiveName "SkynetSequencer.zip"
+}
+
+
+dependencies {
+
+   implementation project(':Coordinator')
+   implementation project(':CourseFilter')
+   implementation project(':Common')
+   	implementation project(':courseFetcher')
+    implementation project(':Sequencer')
+
+}
+
+application {
+	mainClassName = 'Driver'
+}
+
+
