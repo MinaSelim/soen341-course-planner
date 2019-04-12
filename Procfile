@@ -1,0 +1,1 @@
+web: gradle bootrun -Pport=$PORT
