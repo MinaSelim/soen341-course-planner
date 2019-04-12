@@ -133,7 +133,7 @@ function SignUp(props) {
             <InputLabel htmlFor="password">Password</InputLabel>
             <Input name="password" type="password" id="password" autoComplete="current-password" value={props.state.password} onChange={props.handleChange.bind(this)}/>
           </FormControl>
-         <Link to={'/SignIn'}>
+         
           <Button
             type="submit"
             fullWidth
@@ -144,12 +144,15 @@ function SignUp(props) {
           >
             Sign up
           </Button>
-         </Link> 
+          
+        
         </form>
       </Paper>
     </main>
 
   );
+
+
   function signup(e){
     e.preventDefault();
     Authenticator.auth().createUserWithEmailAndPassword(props.state.email, props.state.password).then((user)=>
@@ -160,6 +163,7 @@ function SignUp(props) {
       var email=props.state.email;
       var program=props.state.program;
       var idnumber=props.state.idnumber;
+      console.log(props.state.idnumber);
       
       if (user !== null) 
       {
@@ -172,15 +176,11 @@ function SignUp(props) {
           });
       }
     }).then(()=>{
-      const element = (
-        <Router>
-           <SignIn />
-        </Router>
-      );
-      ReactDOM.render(element, document.getElementById('root'));
+      console.log("About to push history");
+      window.location.assign("http://localhost:8080");
     }).catch(error => {
       alert(error.message);
-});
+    })
   }
 }
 

@@ -20,7 +20,7 @@ import static PracticeServer.SampleServer.service.CoordinatorService.getJsonSequ
 @Controller
 public class RoutingController{
 
-    @RequestMapping(value={"/","/SignIn","SignInPage"}, method=RequestMethod.GET)
+    @RequestMapping(value={"/","/SignIn","SignInPage","SignUp"}, method=RequestMethod.GET)
     public String index() {
        return "index.html";
     }
