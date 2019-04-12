@@ -112,7 +112,6 @@ function SignUp(props) {
          >
           <MenuItem value={"SOEN"} >SOEN</MenuItem>
           <MenuItem value={"COEN"} >COEN</MenuItem>
-          <MenuItem value={"COMP"} >COMP</MenuItem>
           <MenuItem value={"ELEC"} >ELEC</MenuItem>
           <MenuItem value={"CIVI"} >CIVI</MenuItem>
           <MenuItem value={"BLDG"} >BLDG</MenuItem>
