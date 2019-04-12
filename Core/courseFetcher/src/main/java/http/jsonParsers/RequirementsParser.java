@@ -26,6 +26,7 @@ public class RequirementsParser{
         content = content.replaceAll("(?i)NeverTaken" , "NT:");
         content = content.replaceAll("(?i)Course" , "");
         content = content.replaceAll("(?i)previouslyorconcurrently" , "POC");
+	content = content.replaceAll("(?i)Minimumof45creditsinBEng\\(Computer\\)" , "");
         String[] contentArr = content.split("(?i)Youmustcomplete1ofthefollowingrules");
        
 
